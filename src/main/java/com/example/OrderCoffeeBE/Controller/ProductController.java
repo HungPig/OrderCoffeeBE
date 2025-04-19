@@ -60,6 +60,7 @@ public class ProductController {
             return new ResponseEntity<>("An error occurred while creating product", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    //ok
 
     @RequestMapping(value = "edit",
             method = RequestMethod.PUT,
