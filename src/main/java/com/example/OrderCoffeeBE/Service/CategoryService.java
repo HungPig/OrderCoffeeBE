@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    public List<Category> getAllCategories();
+    public  List<Category> getAllCategories();
 
     public Optional<Category> findByIdCate(int id);
 
