@@ -1,12 +1,10 @@
 package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.Category;
-import com.example.OrderCoffeeBE.Entity.Product;
 import com.example.OrderCoffeeBE.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
