@@ -12,6 +12,7 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Override
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
@@ -38,11 +39,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category DeleteCate(int id) {
-        Optional<Category> category = categoryRepository.findById(id);
-        if (category.isPresent()) {
-            categoryRepository.deleteById(id);
-            return category.get();
+    public Category DeleteCate(Category category) {
+        if (category != null) {
+            Optional<Category> existingCategory = categoryRepository.findById(category.getId());
+            if (existingCategory.isPresent()) {
+                categoryRepository.deleteById(category.getId());
+                return existingCategory.get();
+            }
         }
         return null;
     }

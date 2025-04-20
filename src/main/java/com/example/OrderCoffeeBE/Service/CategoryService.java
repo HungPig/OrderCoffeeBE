@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    public List<Category> getAllCategories();
+    public  List<Category> getAllCategories();
 
     public Optional<Category> findByIdCate(int id);
 
@@ -17,5 +17,5 @@ public interface CategoryService {
 
     public Category UpdateCate(Category category);
 
-    public Category DeleteCate(int id);
+    public Category DeleteCate(Category category);
 }
