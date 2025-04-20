@@ -11,5 +11,5 @@ public interface ProductService {
     public Optional<Product> findByName(String name);
     public Product CreateProduct(Product product);
     public Product UpdateProduct(Product product);
-    public Product DeleteProduct(int id);
+    public Product DeleteProduct(Product product);
 }

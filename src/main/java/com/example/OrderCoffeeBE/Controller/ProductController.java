@@ -15,7 +15,7 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
-//Changes
+
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.findAll();
@@ -59,7 +59,8 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
         try {
-            productService.DeleteProduct(id);
+            Product product = productService.findById(id);
+            productService.DeleteProduct(product);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
