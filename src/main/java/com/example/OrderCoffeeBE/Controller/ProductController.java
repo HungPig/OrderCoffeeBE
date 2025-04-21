@@ -1,69 +1,77 @@
 package com.example.OrderCoffeeBE.Controller;
 
-import com.example.OrderCoffeeBE.Entity.Product;
+import com.example.OrderCoffeeBE.Entity.products;
 import com.example.OrderCoffeeBE.Service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.OrderCoffeeBE.repository.ApiResonse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin(origins = "*")
 public class ProductController {
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public ProductController(ProductService _productService) {
+        productService = _productService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.findAll();
-        if (products.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(products);
+    public ResponseEntity<ApiResonse<List<products>>> getAllProducts() {
+        List<products> products = productService.findAll();
+        return ResponseEntity.ok(ApiResonse.success("GET Products success", products));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
+    public ResponseEntity<ApiResonse<products>> getProductById(@PathVariable Integer id) {
         try {
-            Product product = productService.findById(id);
-            return ResponseEntity.ok(product);
+            products product = productService.findById(id);
+            return ResponseEntity.ok(ApiResonse.success("GET Product success", product));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<ApiResonse<products>> createProduct(@RequestBody products product) {
         try {
-            Product createdProduct = productService.CreateProduct(product);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+            products createdProduct = productService.createProduct(product);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApiResonse.success("Create Product success", createdProduct));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResonse.error("Create Product failed", e.getMessage()));
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @RequestBody Product product) {
+    public ResponseEntity<ApiResonse<products>> updateProduct(@PathVariable int id, @RequestBody products product) {
         try {
-            product.setId(id); // Ensure ID matches path variable
-            Product updatedProduct = productService.UpdateProduct(product);
-            return ResponseEntity.ok(updatedProduct);
+            product.setId(id);
+            products updatedProduct = productService.updateProduct(product);
+            return ResponseEntity.ok(ApiResonse.success("Update Product success", updatedProduct));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResonse.error("Product not found", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResonse.error("Update Product failed", e.getMessage()));
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
+    public ResponseEntity<ApiResonse<Void>> deleteProduct(@PathVariable int id) {
         try {
-            Product product = productService.findById(id);
-            productService.DeleteProduct(product);
-            return ResponseEntity.noContent().build();
+            products product = productService.findById(id);
+            productService.deleteProduct(product);
+            return ResponseEntity.ok().body(ApiResonse.success("Delete Product success", null));
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResonse.error("Delete Product failed", e.getMessage()));
         }
     }
 }

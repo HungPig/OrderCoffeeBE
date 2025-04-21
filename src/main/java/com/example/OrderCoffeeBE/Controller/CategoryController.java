@@ -1,117 +1,79 @@
 package com.example.OrderCoffeeBE.Controller;
 
-import com.example.OrderCoffeeBE.Entity.Category;
-import com.example.OrderCoffeeBE.Entity.Product;
+import com.example.OrderCoffeeBE.Entity.categories;
 import com.example.OrderCoffeeBE.Service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.OrderCoffeeBE.repository.ApiResonse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/category")
 @CrossOrigin(origins = "*")
 public class CategoryController {
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService _categoryService) {
+        categoryService = _categoryService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        return categories.isEmpty()
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.ok(categories);
-    }
-    @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Integer id) {
-        try {
-            Optional<Category> category = categoryService.findByIdCate(id);
-            return category.isPresent()
-                    ? ResponseEntity.ok(category.get())
-                    : ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ApiResonse<List<categories>>> getAllCategories() {
+        List<categories> categories = categoryService.getAllCategories();
+        return ResponseEntity.ok(ApiResonse.success("Get Category Success", categories));
     }
 
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Category> getCategoryByName(@PathVariable String name) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResonse<categories>> getCategory(@PathVariable int id) {
         try {
-            Optional<Category> category = categoryService.findByNameCate(name);
-            return category.isPresent()
-                    ? ResponseEntity.ok(category.get())
-                    : ResponseEntity.notFound().build();
+            categories category = categoryService.findByIdCate(id);
+            return ResponseEntity.ok(ApiResonse.success("Get Category Success", category));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResonse.error("Get Category failed", e.getMessage()));
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody Category category) {
+    public ResponseEntity<ApiResonse<categories>> createCategory(@RequestBody categories category) {
         try {
-            // Validate input data
-            if (category.getName() == null || category.getName().trim().isEmpty()) {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body("Tên danh mục không được để trống");
-            }
-            Optional<Category> existingCategory = categoryService.findByNameCate(category.getName());
-            if (existingCategory.isPresent()) {
-                return ResponseEntity
-                        .status(HttpStatus.CONFLICT)
-                        .body("Danh mục với tên '" + category.getName() + "' đã tồn tại");
-            }
-            Category newCategory = new Category();
-            newCategory.setName(category.getName());
-
-            Category createdCategory = categoryService.CreateCate(newCategory);
-
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(createdCategory);
+            categoryService.createCate(category);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApiResonse.success("Add Category Success", category));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Lỗi server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResonse.error("Add Category failed", e.getMessage()));
         }
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Integer id, @RequestBody Category category) {
-        try {
-            Optional<Category> existingCategory = categoryService.findByIdCate(id);
-            if (!existingCategory.isPresent()) {
-                return ResponseEntity.notFound().build();
-            }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResonse<categories>> updateCategory(@PathVariable int id, @RequestBody categories category) {
+        try {
             category.setId(id);
-            Category updatedCategory = categoryService.UpdateCate(category);
-            return ResponseEntity.ok(updatedCategory);
+            categoryService.updateCate(category);
+            return ResponseEntity.ok(ApiResonse.success("Update Category Success", category));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResonse.error("Category Not Found", e.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResonse.error("Update Category failed", e.getMessage()));
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
+    public ResponseEntity<ApiResonse<categories>> deleteCategory(@PathVariable int id) {
         try {
-            Optional<Category> category = categoryService.findByIdCate(id);
-            if (!category.isPresent()) {
-                return ResponseEntity.notFound().build();
-            }
 
-            categoryService.DeleteCate(category.get());
-            return ResponseEntity.noContent().build();
+            categories category = categoryService.findByIdCate(id);
+            categoryService.deleteCate(category);
+            return ResponseEntity.ok(ApiResonse.success("Delete Category Success", category));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResonse.error("Delete Category failed", e.getMessage()));
         }
     }
 }

@@ -1,15 +1,14 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.Product;
+import com.example.OrderCoffeeBE.Entity.products;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductService {
-    public List<Product> findAll();
-    public Product findById(int id);
-    public Optional<Product> findByName(String name);
-    public Product CreateProduct(Product product);
-    public Product UpdateProduct(Product product);
-    public Product DeleteProduct(Product product);
+    List<products> findAll();
+    products findById(int id);
+    //     Optional<products> findByName(String name);
+    products createProduct(products product);
+    products updateProduct(products product);
+    void deleteProduct(products product);
 }

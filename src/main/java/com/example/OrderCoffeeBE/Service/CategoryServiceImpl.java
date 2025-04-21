@@ -1,52 +1,51 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.Category;
+import com.example.OrderCoffeeBE.Entity.categories;
 import com.example.OrderCoffeeBE.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
+
 
 @Service("categoryService")
 public class CategoryServiceImpl implements CategoryService {
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+
+    public CategoryServiceImpl(CategoryRepository _categoryRepository) {
+        categoryRepository = _categoryRepository;
+    }
 
     @Override
-    public List<Category> getAllCategories() {
+    public List<categories> getAllCategories() {
         return categoryRepository.findAll();
     }
 
     @Override
-    public Optional<Category> findByIdCate(int id) {
-        return categoryRepository.findById(id);
+    public categories findByIdCate(int id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
     }
 
     @Override
-    public Optional<Category> findByNameCate(String name) {
-        return categoryRepository.findByName(name);
+    public void createCate(categories categories) {
+        categoryRepository.save(categories);
     }
 
     @Override
-    public Category CreateCate(Category category) {
-        return categoryRepository.save(category);
-    }
-
-    @Override
-    public Category UpdateCate(Category category) {
-        return categoryRepository.save(category);
-    }
-
-    @Override
-    public Category DeleteCate(Category category) {
-        if (category != null) {
-            Optional<Category> existingCategory = categoryRepository.findById(category.getId());
-            if (existingCategory.isPresent()) {
-                categoryRepository.deleteById(category.getId());
-                return existingCategory.get();
-            }
+    public void updateCate(categories updateCategories) {
+        categories existingCategories = categoryRepository.findById(updateCategories.getId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        if (updateCategories.getId() > 0) {
+            existingCategories.setId(updateCategories.getId());
         }
-        return null;
+        if (updateCategories.getName() != null) {
+            existingCategories.setName(updateCategories.getName());
+        }
+        categoryRepository.save(existingCategories);
+    }
+
+    @Override
+    public void deleteCate(categories categories) {
+        categoryRepository.delete(categories);
     }
 }
