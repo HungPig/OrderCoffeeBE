@@ -1,6 +1,7 @@
 package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.products;
+import com.example.OrderCoffeeBE.Service.CategoryServiceImpl;
 import com.example.OrderCoffeeBE.Service.ProductService;
 import com.example.OrderCoffeeBE.repository.ApiResonse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/products")
@@ -16,6 +18,8 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private CategoryServiceImpl categoryService;
 
     @GetMapping
     public ResponseEntity<ApiResonse<List<products>>> getAllProducts() {
@@ -51,6 +55,9 @@ public class ProductController {
             product.setId(id);
             products updatedProduct = productService.UpdateProduct(product);
             return ResponseEntity.ok(ApiResonse.success("Update Product success", updatedProduct));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResonse.error("Product not found", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResonse.error("Update Product failed", e.getMessage()));
@@ -58,13 +65,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
+    public ResponseEntity<ApiResonse<Void>> deleteProduct(@PathVariable Integer id) {
         try {
             products product = productService.findById(id);
             productService.DeleteProduct(product);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().body(ApiResonse.success("Delete Product success", null));
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResonse.error("Delete Product failed", e.getMessage()));
         }
     }
 }
