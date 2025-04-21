@@ -15,17 +15,18 @@ public class ProductServiceImpl implements ProductService {
     }
     @Override
     public List<products> findAll() {
-        return productRepository.findAll();
+        return productRepository.findAllByDeLF(0);
     }
 
     @Override
     public products findById(int id) {
-        return productRepository.findById(id)
+        return productRepository.findByIdAndDeLFNot(id, 1)
                 .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
     }
 
     @Override
     public products createProduct(products product) {
+        product.setDeLF(0);
         return productRepository.save(product);
     }
 
@@ -54,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(products product) {
-        productRepository.delete(product);
+        product.setDeLF(1);
+        productRepository.save(product);
     }
 }
