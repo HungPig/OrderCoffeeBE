@@ -17,17 +17,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<categories> getAllCategories() {
-        return categoryRepository.findAll();
+        return categoryRepository.findAllByDeFL(0);
     }
 
     @Override
     public categories findByIdCate(int id) {
-        return categoryRepository.findById(id)
+        return categoryRepository.findByIdAndDeFLNot(id, 1)
                 .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
     }
 
     @Override
     public void createCate(categories categories) {
+        categories.setDeFL(0);
         categoryRepository.save(categories);
     }
 
@@ -46,6 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCate(categories categories) {
+        categories.setDeFL(1);
         categoryRepository.delete(categories);
     }
 }
