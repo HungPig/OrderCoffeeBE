@@ -30,12 +30,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public products CreateProduct(products product) {
+    public products createProduct(products product) {
         return productRepository.save(product);
     }
 
     @Override
-    public products UpdateProduct(products updateProduct) {
+    public products updateProduct(products updateProduct) {
         products existingProduct = productRepository.findById(updateProduct.getId())
                 .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + updateProduct.getId()));
         if(updateProduct.getName() != null) {
@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public products DeleteProduct(products product) {
-        return productRepository.save(product);
+    public void deleteProduct(products product) {
+        productRepository.delete(product);
     }
 }

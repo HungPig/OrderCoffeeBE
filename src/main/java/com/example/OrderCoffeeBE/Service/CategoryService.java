@@ -1,20 +1,20 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.Category;
+import com.example.OrderCoffeeBE.Entity.categories;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    public  List<Category> getAllCategories();
+    public  List<categories> getAllCategories();
 
-    public Optional<Category> findByIdCate(int id);
+    public categories findByIdCate(int id);
 
-    public Optional<Category> findByNameCate(String name);
+    public Optional<categories> findByNameCate(String name);
 
-    public Category CreateCate(Category category);
+    public categories createCate(categories categories);
 
-    public Category UpdateCate(Category category);
+    public categories updateCate(categories categories);
 
-    public Category DeleteCate(Category category);
+    public void deleteCate(categories categories);
 }

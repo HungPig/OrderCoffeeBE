@@ -1,10 +1,8 @@
 package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.products;
-import com.example.OrderCoffeeBE.Service.CategoryServiceImpl;
 import com.example.OrderCoffeeBE.Service.ProductService;
 import com.example.OrderCoffeeBE.repository.ApiResonse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +14,11 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/products")
 @CrossOrigin(origins = "*")
 public class ProductController {
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private CategoryServiceImpl categoryService;
+    private final ProductService productService;
+
+    public ProductController(ProductService _productService) {
+        productService = _productService;
+    }
 
     @GetMapping
     public ResponseEntity<ApiResonse<List<products>>> getAllProducts() {
@@ -40,7 +39,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ApiResonse<products>> createProduct(@RequestBody products product) {
         try {
-            products createdProduct = productService.CreateProduct(product);
+            products createdProduct = productService.createProduct(product);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ApiResonse.success("Create Product success", createdProduct));
         } catch (Exception e) {
@@ -50,10 +49,10 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResonse<products>> updateProduct(@PathVariable Integer id, @RequestBody products product) {
+    public ResponseEntity<ApiResonse<products>> updateProduct(@PathVariable int id, @RequestBody products product) {
         try {
             product.setId(id);
-            products updatedProduct = productService.UpdateProduct(product);
+            products updatedProduct = productService.updateProduct(product);
             return ResponseEntity.ok(ApiResonse.success("Update Product success", updatedProduct));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -65,10 +64,10 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResonse<Void>> deleteProduct(@PathVariable Integer id) {
+    public ResponseEntity<ApiResonse<Void>> deleteProduct(@PathVariable int id) {
         try {
             products product = productService.findById(id);
-            productService.DeleteProduct(product);
+            productService.deleteProduct(product);
             return ResponseEntity.ok().body(ApiResonse.success("Delete Product success", null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
