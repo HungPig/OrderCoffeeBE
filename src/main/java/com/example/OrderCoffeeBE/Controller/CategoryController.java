@@ -21,13 +21,20 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<categories>>> getAllCategories() {
         List<categories> categories = categoryService.getAllCategories();
+        if(categories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("No categories found"));
+        }
         return ResponseEntity.ok(ApiResponse.success("Get Category Success", categories));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<categories>> getCategory(@PathVariable int id) {
-        categories hungCategory = this.categoryService.findByIdCate(id);
-        return ResponseEntity.ok(ApiResponse.success("Get Category Success", hungCategory));
+    public ResponseEntity<ApiResponse<categories>> getCategoryById(@PathVariable int id) {
+        categories fetchCategory = this.categoryService.findByIdCate(id);
+        if(fetchCategory == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("Category not found " + id));
+        }
+        return ResponseEntity.ok(ApiResponse.success("Get Category Success", fetchCategory));
     }
 
     @PostMapping
@@ -43,8 +50,9 @@ public class CategoryController {
                 .body(ApiResponse.success("Create Category Success", newCategory));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<categories>> updateCategory(@PathVariable int id, @RequestBody categories category)  {
+        category.setId(id);
         categories hungCategory = this.categoryService.updateCate(category);
         if (hungCategory == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -56,7 +64,11 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<categories>> deleteCategory(@PathVariable int id) {
         categories currentCategory = this.categoryService.findByIdCate(id);
-        this.categoryService.deleteCate(currentCategory);
+        if (currentCategory == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Category not found" + id));
+        }
+        this.categoryService.deleteCate(id);
         return ResponseEntity.ok(ApiResponse.success("Delete Category Success", currentCategory));
     }
 }

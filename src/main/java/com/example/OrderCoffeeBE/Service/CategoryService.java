@@ -9,6 +9,6 @@ public interface CategoryService {
      categories findByIdCate(int id);
      categories createCate(categories categories);
      categories updateCate(categories categories);
-     categories deleteCate(categories categories);
+     void deleteCate(int id);
      boolean isNameExist(String name);
 }

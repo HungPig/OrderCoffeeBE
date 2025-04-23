@@ -12,5 +12,4 @@ public class categories {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private int delF; //0 not delete ,1 delete
 }

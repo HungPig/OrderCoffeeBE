@@ -18,12 +18,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<categories> getAllCategories() {
         //tìm Theo Flag 0 Là ẩn
-        return categoryRepository.findAllByDelF(0);
+        return categoryRepository.findAll();
     }
 
     @Override
     public categories findByIdCate(int id) {
-        Optional<categories> categoryOptional = categoryRepository.findByIdAndDelFNot(id, 1);
+        Optional<categories> categoryOptional = categoryRepository.findById(id);
         if (categoryOptional.isPresent()) {
             return categoryOptional.get();
         }
@@ -32,7 +32,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public categories createCate(categories categories) {
-        categories.setDelF(0);
         return categoryRepository.save(categories);
     }
 
@@ -47,9 +46,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public categories deleteCate(categories categories) {
-        categories.setDelF(1);
-        return this.categoryRepository.save(categories);
+    public void deleteCate(int id) {
+        this.categoryRepository.deleteById(id);
     }
 
     @Override
