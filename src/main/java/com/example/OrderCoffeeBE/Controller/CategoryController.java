@@ -3,6 +3,7 @@ package com.example.OrderCoffeeBE.Controller;
 import com.example.OrderCoffeeBE.Entity.categories;
 import com.example.OrderCoffeeBE.Service.CategoryService;
 import com.example.OrderCoffeeBE.response.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,10 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/category")
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class CategoryController {
     private final CategoryService categoryService;
-
-    public CategoryController(CategoryService _categoryService) {
-        categoryService = _categoryService;
-    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<categories>>> getAllCategories() {
@@ -28,15 +26,15 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<categories>> getCategory(@PathVariable int id) {
-       categories hungCategory = this.categoryService.findByIdCate(id);
-       return ResponseEntity.ok(ApiResponse.success("Get Category Success", hungCategory));
+        categories hungCategory = this.categoryService.findByIdCate(id);
+        return ResponseEntity.ok(ApiResponse.success("Get Category Success", hungCategory));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<categories>> createCategory(@RequestBody categories category) {
-       //check Name
+        //check Name
         boolean isNameExist = this.categoryService.isNameExist(category.getName());
-        if(isNameExist) {
+        if (isNameExist) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponse.error("Category name already exists"));
         }
@@ -46,7 +44,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<categories>> updateCategory(@PathVariable int id, @RequestBody categories category) {
+    public ResponseEntity<ApiResponse<categories>> updateCategory(@PathVariable int id, @RequestBody categories category)  {
         categories hungCategory = this.categoryService.updateCate(category);
         if (hungCategory == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

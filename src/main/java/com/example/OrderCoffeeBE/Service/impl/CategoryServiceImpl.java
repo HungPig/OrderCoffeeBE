@@ -17,6 +17,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<categories> getAllCategories() {
+        //tìm Theo Flag 0 Là ẩn
         return categoryRepository.findAllByDelF(0);
     }
 
@@ -25,9 +26,8 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<categories> categoryOptional = categoryRepository.findByIdAndDelFNot(id, 1);
         if (categoryOptional.isPresent()) {
             return categoryOptional.get();
-        } else {
-            throw new NoSuchElementException("Category not found with id: " + id);
         }
+        return null;
     }
 
     @Override
@@ -38,9 +38,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public categories updateCate(categories updateCategories) {
-        categories currentCategories = this.findByIdCate(updateCategories.getId());
-        currentCategories.setName(updateCategories.getName());
-        return this.categoryRepository.save(currentCategories);
+        categories currentCate = this.findByIdCate(updateCategories.getId());
+        if (currentCate == null) {
+            return null;
+        }
+        currentCate.setName(updateCategories.getName());
+        return this.categoryRepository.save(currentCate);
     }
 
     @Override

@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
 @RequiredArgsConstructor
 @Service("productService")
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+
     @Override
     public List<products> findAll() {
         return productRepository.findAllByDelF(0);
@@ -32,15 +34,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public products updateProduct(products updateProduct) {
         products currentProduct = this.findById(updateProduct.getId());
-        if(currentProduct != null) {
-            currentProduct.setName(updateProduct.getName());
-            currentProduct.setPrice(updateProduct.getPrice());
-            currentProduct.setImage(updateProduct.getImage());
-            currentProduct.setDescription(updateProduct.getDescription());
-            currentProduct.setCategoryId(updateProduct.getCategoryId());
-            currentProduct.setDelF(updateProduct.getDelF());
-            currentProduct = this.productRepository.save(currentProduct);
-        }
+        currentProduct.setName(updateProduct.getName());
+        currentProduct.setPrice(updateProduct.getPrice());
+        currentProduct.setImage(updateProduct.getImage());
+        currentProduct.setDescription(updateProduct.getDescription());
+        currentProduct.setCategoryId(updateProduct.getCategoryId());
+        currentProduct = this.productRepository.save(currentProduct);
         return currentProduct;
     }
 
