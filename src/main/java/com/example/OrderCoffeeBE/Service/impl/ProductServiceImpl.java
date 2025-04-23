@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDelF(0);
         return productRepository.save(product);
     }
-
+//changes
     @Override
     public products updateProduct(products updateProduct) {
         products currentProduct = this.findById(updateProduct.getId());
