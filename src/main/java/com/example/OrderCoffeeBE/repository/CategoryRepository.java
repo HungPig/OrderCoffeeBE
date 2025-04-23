@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<categories, Integer> {
-    List<categories> findAllByDeFL(int deLF);
+    List<categories> findAllByDelF(int delF);
 
-    Optional<categories> findByIdAndDeFLNot(int id, int deFL);
+    Optional<categories> findByIdAndDelFNot(int id, int delL);
+    boolean existsByName(String name);
 }

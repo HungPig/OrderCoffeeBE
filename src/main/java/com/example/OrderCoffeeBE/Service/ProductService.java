@@ -10,4 +10,5 @@ public interface ProductService {
     products createProduct(products product);
     products updateProduct(products product);
     void deleteProduct(products product);
+    boolean isNameExist(String name);
 }

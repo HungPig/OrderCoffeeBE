@@ -2,7 +2,7 @@ package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.categories;
 import com.example.OrderCoffeeBE.Service.CategoryService;
-import com.example.OrderCoffeeBE.repository.ApiResonse;
+import com.example.OrderCoffeeBE.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,59 +21,44 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResonse<List<categories>>> getAllCategories() {
+    public ResponseEntity<ApiResponse<List<categories>>> getAllCategories() {
         List<categories> categories = categoryService.getAllCategories();
-        return ResponseEntity.ok(ApiResonse.success("Get Category Success", categories));
+        return ResponseEntity.ok(ApiResponse.success("Get Category Success", categories));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResonse<categories>> getCategory(@PathVariable int id) {
-        try {
-            categories category = categoryService.findByIdCate(id);
-            return ResponseEntity.ok(ApiResonse.success("Get Category Success", category));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResonse.error("Get Category failed", e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<categories>> getCategory(@PathVariable int id) {
+       categories hungCategory = this.categoryService.findByIdCate(id);
+       return ResponseEntity.ok(ApiResponse.success("Get Category Success", hungCategory));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResonse<categories>> createCategory(@RequestBody categories category) {
-        try {
-            categoryService.createCate(category);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(ApiResonse.success("Add Category Success", category));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResonse.error("Add Category failed", e.getMessage()));
+    public ResponseEntity<ApiResponse<categories>> createCategory(@RequestBody categories category) {
+       //check Name
+        boolean isNameExist = this.categoryService.isNameExist(category.getName());
+        if(isNameExist) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Category name already exists"));
         }
+        categories newCategory = this.categoryService.createCate(category);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Create Category Success", newCategory));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResonse<categories>> updateCategory(@PathVariable int id, @RequestBody categories category) {
-        try {
-            category.setId(id);
-            categoryService.updateCate(category);
-            return ResponseEntity.ok(ApiResonse.success("Update Category Success", category));
-        } catch (NoSuchElementException e) {
+    public ResponseEntity<ApiResponse<categories>> updateCategory(@PathVariable int id, @RequestBody categories category) {
+        categories hungCategory = this.categoryService.updateCate(category);
+        if (hungCategory == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResonse.error("Category Not Found", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResonse.error("Update Category failed", e.getMessage()));
+                    .body(ApiResponse.error("Category not found"));
         }
+        return ResponseEntity.ok(ApiResponse.success("Update Category Success", hungCategory));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResonse<categories>> deleteCategory(@PathVariable int id) {
-        try {
-
-            categories category = categoryService.findByIdCate(id);
-            categoryService.deleteCate(category);
-            return ResponseEntity.ok(ApiResonse.success("Delete Category Success", category));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResonse.error("Delete Category failed", e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<categories>> deleteCategory(@PathVariable int id) {
+        categories currentCategory = this.categoryService.findByIdCate(id);
+        this.categoryService.deleteCate(currentCategory);
+        return ResponseEntity.ok(ApiResponse.success("Delete Category Success", currentCategory));
     }
 }
