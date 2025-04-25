@@ -24,6 +24,5 @@ public class products {
     @CreationTimestamp
     LocalDateTime updatedAt;
     private int status;
-    private int deLF; //0 not delete ,1 delete
     private int category_id;
 }

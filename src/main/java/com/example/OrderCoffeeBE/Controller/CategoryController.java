@@ -49,7 +49,7 @@ public class CategoryController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<ApiResonse<categories>> updateCategory(@PathVariable int id, @RequestBody categories category) {
         try {
             category.setId(id);
