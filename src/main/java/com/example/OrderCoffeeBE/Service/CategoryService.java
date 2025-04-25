@@ -7,8 +7,8 @@ import java.util.List;
 public interface CategoryService {
      List<categories> getAllCategories();
      categories findByIdCate(int id);
-//     Optional<categories> findByNameCate(String name);
-     void createCate(categories categories);
-     void updateCate(categories categories);
-     void deleteCate(categories categories);
+     categories createCate(categories categories);
+     categories updateCate(categories categories);
+     void deleteCate(int id);
+     boolean isNameExist(String name);
 }

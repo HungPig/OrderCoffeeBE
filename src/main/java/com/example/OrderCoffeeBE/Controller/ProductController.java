@@ -1,77 +1,72 @@
 package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.products;
-import com.example.OrderCoffeeBE.Service.ProductService;
-import com.example.OrderCoffeeBE.repository.ApiResonse;
+import com.example.OrderCoffeeBE.Service.impl.ProductServiceImpl;
+import com.example.OrderCoffeeBE.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin(origins = "*")
 public class ProductController {
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
 
-    public ProductController(ProductService _productService) {
+    public ProductController(ProductServiceImpl _productService) {
         productService = _productService;
     }
 
     @GetMapping
-    public ResponseEntity<ApiResonse<List<products>>> getAllProducts() {
+    public ResponseEntity<ApiResponse<List<products>>> getAllProducts() {
         List<products> products = productService.findAll();
-        return ResponseEntity.ok(ApiResonse.success("GET Products success", products));
+        return ResponseEntity.ok(ApiResponse.success("GET Products success", products));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResonse<products>> getProductById(@PathVariable Integer id) {
-        try {
-            products product = productService.findById(id);
-            return ResponseEntity.ok(ApiResonse.success("GET Product success", product));
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ApiResponse<products>> getProductById(@PathVariable Integer id) {
+       products findProduct = this.productService.findById(id);
+       if(findProduct == null) {
+           return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                   .body(ApiResponse.error("Product not found"));
+       }
+       return ResponseEntity.ok(ApiResponse.success("Get Product success", findProduct));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResonse<products>> createProduct(@RequestBody products product) {
-        try {
-            products createdProduct = productService.createProduct(product);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(ApiResonse.success("Create Product success", createdProduct));
-        } catch (Exception e) {
+    public ResponseEntity<ApiResponse<products>> createProduct(@RequestBody products product) {
+        boolean isNameExist = this.productService.isNameExist(product.getName());
+        if (isNameExist) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResonse.error("Create Product failed", e.getMessage()));
+                    .body(ApiResponse.error("Product name already exists"));
         }
+        products newProduct = this.productService.createProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Create Product success", newProduct));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResonse<products>> updateProduct(@PathVariable int id, @RequestBody products product) {
-        try {
-            product.setId(id);
-            products updatedProduct = productService.updateProduct(product);
-            return ResponseEntity.ok(ApiResonse.success("Update Product success", updatedProduct));
-        } catch (NoSuchElementException e) {
+    public ResponseEntity<ApiResponse<products>> updateProduct(@PathVariable int id, @RequestBody products product) {
+
+        products hungProduct = this.productService.updateProduct(product);
+        if (hungProduct == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResonse.error("Product not found", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResonse.error("Update Product failed", e.getMessage()));
+                    .body(ApiResponse.error("Product not found"));
         }
+        return ResponseEntity.ok(ApiResponse.success("Update Product success", hungProduct));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResonse<Void>> deleteProduct(@PathVariable int id) {
-        try {
-            products product = productService.findById(id);
-            productService.deleteProduct(product);
-            return ResponseEntity.ok().body(ApiResonse.success("Delete Product success", null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResonse.error("Delete Product failed", e.getMessage()));
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable int id) {
+        products currentProduct = this.productService.findById(id);
+        if (currentProduct != null) {
+            this.productService.deleteProduct(currentProduct);
+            return ResponseEntity.ok(ApiResponse.success("Delete Product success", null));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Product not found"));
         }
     }
 }
