@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductRepository extends JpaRepository<products, Integer> {
-    List<products> findAllByDelF(int delF);
-    Optional<products> findByIdAndDelFNot(int id, int delF);
+public interface ProductRepository extends JpaRepository<products, Integer> { ;
     boolean existsByName(String name);
 }

@@ -54,4 +54,11 @@ public class CategoryServiceImpl implements CategoryService {
     public boolean isNameExist(String name) {
         return this.categoryRepository.existsByName(name);
     }
+
+    @Override
+    public List<categories> findByName(String keyword) {
+        return this.categoryRepository.findByName(keyword);
+    }
+
+
 }
