@@ -1,11 +1,14 @@
 package com.example.OrderCoffeeBE.Controller;
 
+import com.example.OrderCoffeeBE.Entity.Request.PostProductRequest;
 import com.example.OrderCoffeeBE.Entity.products;
 import com.example.OrderCoffeeBE.Service.impl.ProductServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,19 +38,22 @@ public class ProductController {
        return ResponseEntity.ok(ApiResponse.success("Get Product success", findProduct));
     }
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<products>> createProduct(@RequestBody products product) {
-        boolean isNameExist = this.productService.isNameExist(product.getName());
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse<products>> createProduct(
+            @RequestPart("products") PostProductRequest productRequest,
+            @RequestParam(value = "image", required = false) MultipartFile imageFile )
+             {
+        boolean isNameExist = this.productService.isNameExist(productRequest.getName());
         if (isNameExist) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponse.error("Product name already exists"));
         }
-        products newProduct = this.productService.createProduct(product);
+        products newProduct = this.productService.createProduct(productRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Create Product success", newProduct));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<products>> updateProduct(@PathVariable int id, @RequestBody products product) {
 
         products hungProduct = this.productService.updateProduct(product);

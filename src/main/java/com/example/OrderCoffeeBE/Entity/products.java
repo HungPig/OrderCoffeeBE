@@ -23,6 +23,6 @@ public class products {
     LocalDateTime createdAt;
     @CreationTimestamp
     LocalDateTime updatedAt;
-    private int status;
+    private Integer status;
     private int category_id;
 }

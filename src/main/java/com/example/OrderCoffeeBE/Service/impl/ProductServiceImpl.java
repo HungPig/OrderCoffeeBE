@@ -1,18 +1,30 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
+import com.example.OrderCoffeeBE.Entity.Request.PostProductRequest;
 import com.example.OrderCoffeeBE.Entity.products;
 import com.example.OrderCoffeeBE.Service.ProductService;
 import com.example.OrderCoffeeBE.repository.ProductRepository;
+import com.example.OrderCoffeeBE.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service("productService")
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final String UPLOAD_DIR = "access/products/";
 
     @Override
     public List<products> findAll() {
@@ -26,10 +38,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public products createProduct(products product) {
-        return productRepository.save(product);
+    public products createProduct(PostProductRequest request) {
+       return this.productRepository.save(request);
     }
-//changes
     @Override
     public products updateProduct(products updateProduct) {
         products currentProduct = this.findById(updateProduct.getId());
