@@ -1,9 +1,7 @@
 package com.example.OrderCoffeeBE.Entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -11,18 +9,20 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class products {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String name;
     private String description;
-    private int price;
+    private Integer price;
     private String image;
     @CreationTimestamp
     LocalDateTime createdAt;
     @CreationTimestamp
     LocalDateTime updatedAt;
     private Integer status;
-    private int category_id;
+    private Integer category_id;
 }

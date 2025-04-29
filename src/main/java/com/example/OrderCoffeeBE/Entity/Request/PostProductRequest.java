@@ -1,17 +1,20 @@
 package com.example.OrderCoffeeBE.Entity.Request;
 
-import com.example.OrderCoffeeBE.Entity.products;
+import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
-public record PostProductRequest(
-        String name,
-        String description,
-        int price,
-        MultipartFile file,
-        String imageUrl,
-        int status,
-        int category_id
-) {
+import java.time.LocalDateTime;
+@RequiredArgsConstructor
+@Data
+public class PostProductRequest {
+    private int id;
+    private String name;
+    private String description;
+    private Integer price;
+    private Integer status;
+    private Integer category_id;
 }
