@@ -1,7 +1,6 @@
 package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.Request.PostProductRequest;
-import com.example.OrderCoffeeBE.Entity.categories;
 import com.example.OrderCoffeeBE.Entity.products;
 import com.example.OrderCoffeeBE.Service.impl.ProductServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
@@ -23,6 +22,7 @@ import java.util.List;
 public class ProductController {
     private final ProductServiceImpl productService;
     public static String uploadDirectory = System.getProperty("user.dir") + "/access/products";
+
     public ProductController(ProductServiceImpl _productService) {
         productService = _productService;
     }
@@ -58,18 +58,12 @@ public class ProductController {
         products saveProduct = productService.createProduct(product);
         return ResponseEntity.ok(ApiResponse.success("Created Product success", saveProduct));
     }
+
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<products>> updateProduct(@PathVariable int id, @ModelAttribute PostProductRequest requestProduct, MultipartFile image) throws IOException {
-        products findProduct = this.productService.findById(id);
-        products updateProductRequest = productService.updateProduct(findProduct);
-        requestProduct.setId(id);
-        if (!image.isEmpty()) {
-            String originalFilename = image.getOriginalFilename();
-            Path path = Paths.get(uploadDirectory, originalFilename);
-            Files.write(path, image.getBytes());
-            findProduct.setImage(originalFilename);
-        }
-        return ResponseEntity.ok(ApiResponse.success("Update product success", updateProductRequest));
+    public ResponseEntity<ApiResponse<products>> updateProduct(@PathVariable int id, @ModelAttribute PostProductRequest updateProduct, MultipartFile image) throws IOException {
+        updateProduct.setId(id);
+        products updatedProduct = productService.updateProduct(updateProduct, image);
+        return ResponseEntity.ok(ApiResponse.success("Updated Product success", updatedProduct));
     }
 
     @DeleteMapping("/{id}")

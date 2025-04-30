@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,30 +40,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public products updateProduct(products updateProduct) {
-        Optional<products> productOptional = productRepository.findById(updateProduct.getId());
-
-        if (productOptional.isPresent()) {
-            products currentProduct = productOptional.get();
-
-            if (updateProduct.getName() != null) {
-                currentProduct.setName(updateProduct.getName());
-            }
-            if (updateProduct.getDescription() != null) {
-                currentProduct.setDescription(updateProduct.getDescription());
-            }
-            if (updateProduct.getPrice() != null) {
-                currentProduct.setPrice(updateProduct.getPrice());
-            }
-            if (updateProduct.getStatus() != null) {
-                currentProduct.setStatus(updateProduct.getStatus());
-            }
-            if (updateProduct.getCategory_id() != null) {
-                currentProduct.setCategory_id(updateProduct.getCategory_id());
-            }
-            return this.productRepository.save(currentProduct);
+    public products updateProduct(PostProductRequest updateProduct, MultipartFile image) {
+        products current = this.findById(updateProduct.getId());
+        if (updateProduct.getName() != null) {
+            current.setName(updateProduct.getName());
         }
-        return null;
+        if (updateProduct.getPrice() != null) {
+            current.setPrice(updateProduct.getPrice());
+        }
+        if (updateProduct.getDescription() != null) {
+            current.setDescription(updateProduct.getDescription());
+        }
+        if (updateProduct.getCategory_id() != null) {
+            current.setCategory_id(updateProduct.getCategory_id());
+        }
+        if (updateProduct.getStatus() != null) {
+            current.setStatus(updateProduct.getStatus());
+        }
+        if (image != null && !image.isEmpty()) {
+            try {
+                String fileName = image.getOriginalFilename();
+                Path path = Paths.get(uploadDirectory, fileName);
+                Files.write(path, image.getBytes());
+                current.setImage(fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Error Save Image: " + e.getMessage());
+            }
+        }
+        return productRepository.save(current);
     }
 
     @Override

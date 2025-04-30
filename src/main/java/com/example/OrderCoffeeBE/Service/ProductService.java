@@ -9,7 +9,7 @@ public interface ProductService {
     List<products> findAll();
     products findById(int id);
     products createProduct(products products);
-    products updateProduct(products products);
+    products updateProduct(PostProductRequest products, MultipartFile image);
     void deleteProduct(products product);
     boolean isNameExist(String name);
 }
