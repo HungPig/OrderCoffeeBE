@@ -1,7 +1,7 @@
 package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.categories;
-import com.example.OrderCoffeeBE.Service.CategoryService;
+import com.example.OrderCoffeeBE.Service.impl.CategoryServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,14 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class CategoryController {
-    private final CategoryService categoryService;
+    private final CategoryServiceImpl categoryService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<categories>>> getAllCategories() {
@@ -35,6 +34,16 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("Category not found " + id));
         }
         return ResponseEntity.ok(ApiResponse.success("Get Category Success", fetchCategory));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<categories>>> searchCategory(@RequestParam String keyword) {
+        List<categories> nameCategory = this.categoryService.findByName(keyword);
+        if(nameCategory == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("No categories found"));
+        }
+        return ResponseEntity.ok(ApiResponse.success("Get Category Name Success", nameCategory));
     }
 
     @PostMapping

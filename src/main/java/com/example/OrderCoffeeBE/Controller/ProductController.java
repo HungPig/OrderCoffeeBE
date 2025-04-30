@@ -1,12 +1,19 @@
 package com.example.OrderCoffeeBE.Controller;
 
+import com.example.OrderCoffeeBE.Entity.Request.PostProductRequest;
 import com.example.OrderCoffeeBE.Entity.products;
 import com.example.OrderCoffeeBE.Service.impl.ProductServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -14,6 +21,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class ProductController {
     private final ProductServiceImpl productService;
+    public static String uploadDirectory = System.getProperty("user.dir") + "/access/products";
 
     public ProductController(ProductServiceImpl _productService) {
         productService = _productService;
@@ -27,39 +35,39 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<products>> getProductById(@PathVariable Integer id) {
-       products findProduct = this.productService.findById(id);
-       if(findProduct == null) {
-           return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                   .body(ApiResponse.error("Product not found"));
-       }
-       return ResponseEntity.ok(ApiResponse.success("Get Product success", findProduct));
-    }
-
-    @PostMapping
-    public ResponseEntity<ApiResponse<products>> createProduct(@RequestBody products product) {
-        boolean isNameExist = this.productService.isNameExist(product.getName());
-        if (isNameExist) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.error("Product name already exists"));
-        }
-        products newProduct = this.productService.createProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Create Product success", newProduct));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<products>> updateProduct(@PathVariable int id, @RequestBody products product) {
-
-        products hungProduct = this.productService.updateProduct(product);
-        if (hungProduct == null) {
+        products findProduct = this.productService.findById(id);
+        if (findProduct == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("Product not found"));
         }
-        return ResponseEntity.ok(ApiResponse.success("Update Product success", hungProduct));
+        return ResponseEntity.ok(ApiResponse.success("Get Product success", findProduct));
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<products>> createProduct(@ModelAttribute PostProductRequest requestProduct, MultipartFile image) throws IOException {
+        String originalFilename = image.getOriginalFilename();
+        Path path = Paths.get(uploadDirectory, originalFilename);
+        Files.write(path, image.getBytes());
+        products product = new products();
+        product.setName(requestProduct.getName());
+        product.setDescription(requestProduct.getDescription());
+        product.setPrice(requestProduct.getPrice());
+        product.setStatus(requestProduct.getStatus());
+        product.setCategory_id(requestProduct.getCategory_id());
+        product.setImage(originalFilename);
+        products saveProduct = productService.createProduct(product);
+        return ResponseEntity.ok(ApiResponse.success("Created Product success", saveProduct));
+    }
+
+    @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<products>> updateProduct(@PathVariable int id, @ModelAttribute PostProductRequest updateProduct, MultipartFile image) throws IOException {
+        updateProduct.setId(id);
+        products updatedProduct = productService.updateProduct(updateProduct, image);
+        return ResponseEntity.ok(ApiResponse.success("Updated Product success", updatedProduct));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable int id) {
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Integer id) {
         products currentProduct = this.productService.findById(id);
         if (currentProduct != null) {
             this.productService.deleteProduct(currentProduct);
