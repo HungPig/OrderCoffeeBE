@@ -1,6 +1,7 @@
 package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.Request.PostProductRequest;
+import com.example.OrderCoffeeBE.Entity.categories;
 import com.example.OrderCoffeeBE.Entity.products;
 import com.example.OrderCoffeeBE.Service.impl.ProductServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
@@ -41,6 +42,16 @@ public class ProductController {
                     .body(ApiResponse.error("Product not found"));
         }
         return ResponseEntity.ok(ApiResponse.success("Get Product success", findProduct));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<products>>> searchProduct(@RequestParam String keyword) {
+        List<products> nameCategory = this.productService.searchByName(keyword);
+        if(nameCategory == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("No Product found"));
+        }
+        return ResponseEntity.ok(ApiResponse.success("Get Product Name Success", nameCategory));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

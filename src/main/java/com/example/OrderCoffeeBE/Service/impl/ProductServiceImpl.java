@@ -71,6 +71,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<products> searchByName(String keyword) {
+       return  productRepository.findByName(keyword);
+    }
+
+
+    @Override
     public void deleteProduct(products product) {
         productRepository.delete(product);
     }
