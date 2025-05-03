@@ -26,7 +26,7 @@ public class CategoryController {
         }
         return ResponseEntity.ok(ApiResponse.success("Get Category Success", categories));
     }
-
+    //wao
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<categories>> getCategoryById(@PathVariable int id) {
         categories fetchCategory = this.categoryService.findByIdCate(id);
