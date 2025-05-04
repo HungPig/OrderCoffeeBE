@@ -4,10 +4,11 @@ import com.example.OrderCoffeeBE.Entity.orders;
 import com.example.OrderCoffeeBE.Service.OrderService;
 import com.example.OrderCoffeeBE.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+@Service("orderService")
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrdersRepository ordersRepository;
@@ -28,7 +29,7 @@ public class OrderServiceImpl implements OrderService {
         if(currentOrder != null) {
             currentOrder.setId(updateOrder.getId());
             currentOrder.setTable_id(updateOrder.getTable_id());
-            currentOrder.setTotal_price(updateOrder.getTotal_price());
+            currentOrder.setTotal_amount(updateOrder.getTotal_amount());
             currentOrder.setStatus(updateOrder.getStatus());
             orders save = ordersRepository.save(currentOrder);
         }
@@ -36,8 +37,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(orders order) {
-        ordersRepository.delete(order);
+    public void deleteOrder(int id) {
+        ordersRepository.deleteById(id);
     }
 
     @Override
