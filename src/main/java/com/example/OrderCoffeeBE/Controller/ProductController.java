@@ -5,6 +5,7 @@ import com.example.OrderCoffeeBE.Entity.categories;
 import com.example.OrderCoffeeBE.Entity.products;
 import com.example.OrderCoffeeBE.Service.impl.ProductServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductServiceImpl productService;
     public static String uploadDirectory = System.getProperty("user.dir") + "/access/products";
 
-    public ProductController(ProductServiceImpl _productService) {
-        productService = _productService;
-    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<products>>> getAllProducts() {
