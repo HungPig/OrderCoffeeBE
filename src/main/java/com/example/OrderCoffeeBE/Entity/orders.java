@@ -17,11 +17,9 @@ public class orders {
     private Integer id;
     private Integer table_id;
     private String status;
-    private long total_price;
+    private int total_amount;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @CreationTimestamp
     private LocalDateTime updatedAt;
-
-  
 }
