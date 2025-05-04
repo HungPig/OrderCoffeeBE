@@ -9,6 +9,6 @@ public interface OrderService {
     List<orders> findAll();
     orders createOrder(orders order);
     orders updateOrder(orders order);
-    void deleteOrder(orders order);
+    void deleteOrder(int id);
     orders findById(int id);
 }
