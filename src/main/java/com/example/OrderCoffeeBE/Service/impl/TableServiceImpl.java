@@ -35,8 +35,8 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public void deleteTable(tables tables) {
-        tableRepository.delete(tables);
+    public void deleteTable(int id) {
+        tableRepository.deleteById(id);
     }
 
     @Override
@@ -44,5 +44,4 @@ public class TableServiceImpl implements TableService {
         return tableRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Table not found with id: " + id));
     }
-
 }
