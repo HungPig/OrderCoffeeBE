@@ -23,8 +23,8 @@ public class TableController {
         List<tables> TableEntities = tableRepository.findAll();
         return ResponseEntity.ok(ApiResponse.success("GET Tables success", TableEntities));
     }
-    @GetMapping("/id")
-    public ResponseEntity<ApiResponse<tables>> getTableById(@RequestParam int id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<tables>> getTableById(@PathVariable int id) {
        tables findTables = tableRepository.findById(id).get();
        if(findTables == null) {
            return ResponseEntity.ok(ApiResponse.error("Table not found"));

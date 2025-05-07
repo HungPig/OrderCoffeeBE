@@ -20,6 +20,4 @@ public class orders {
     private int total_amount;
     @CreationTimestamp
     private LocalDateTime createdAt;
-    @CreationTimestamp
-    private LocalDateTime updatedAt;
 }
