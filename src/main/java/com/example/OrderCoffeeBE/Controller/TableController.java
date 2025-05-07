@@ -23,9 +23,9 @@ public class TableController {
         List<tables> TableEntities = tableService.findAll();
         return ResponseEntity.ok(ApiResponse.success("GET Tables success", TableEntities));
     }
-    @GetMapping("/id")
-    public ResponseEntity<ApiResponse<tables>> getTableById(@RequestParam int id) {
-       tables findTables = tableService.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<tables>> getTableById(@PathVariable int id) {
+       tables findTables = tableRepository.findById(id).get();
        if(findTables == null) {
            return ResponseEntity.ok(ApiResponse.error("Table not found"));
        }
