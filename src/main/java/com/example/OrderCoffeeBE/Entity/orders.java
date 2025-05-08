@@ -16,6 +16,7 @@ public class orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer table_id;
+    private Integer items;
     private String status;
     private int total_amount;
     @CreationTimestamp

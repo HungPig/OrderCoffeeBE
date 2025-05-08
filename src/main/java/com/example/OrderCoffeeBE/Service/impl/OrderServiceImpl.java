@@ -29,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
         if(currentOrder != null) {
             currentOrder.setId(updateOrder.getId());
             currentOrder.setTable_id(updateOrder.getTable_id());
+            currentOrder.setItems(updateOrder.getItems());
             currentOrder.setTotal_amount(updateOrder.getTotal_amount());
             currentOrder.setStatus(updateOrder.getStatus());
             orders save = ordersRepository.save(currentOrder);

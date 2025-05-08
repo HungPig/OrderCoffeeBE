@@ -25,7 +25,7 @@ public class TableController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<tables>> getTableById(@PathVariable int id) {
-       tables findTables = tableRepository.findById(id).get();
+       tables findTables = tableService.findById(id);
        if(findTables == null) {
            return ResponseEntity.ok(ApiResponse.error("Table not found"));
        }
