@@ -53,7 +53,7 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("Get Product Name Success", nameCategory));
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ResponseEntity<ApiResponse<products>> createProduct(@ModelAttribute PostProductRequest requestProduct, MultipartFile image) throws IOException {
         String originalFilename = image.getOriginalFilename();
         Path path = Paths.get(uploadDirectory, originalFilename);
@@ -69,7 +69,7 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("Created Product success", saveProduct));
     }
 
-    @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<products>> updateProduct(@PathVariable int id, @ModelAttribute PostProductRequest updateProduct, MultipartFile image) throws IOException {
         updateProduct.setId(id);
         products updatedProduct = productService.updateProduct(updateProduct, image);

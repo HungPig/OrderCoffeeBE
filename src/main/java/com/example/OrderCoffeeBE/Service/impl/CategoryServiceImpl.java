@@ -17,17 +17,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<categories> getAllCategories() {
-        //tìm Theo Flag 0 Là ẩn
         return categoryRepository.findAll();
     }
 
     @Override
     public categories findByIdCate(int id) {
         Optional<categories> categoryOptional = categoryRepository.findById(id);
-        if (categoryOptional.isPresent()) {
-            return categoryOptional.get();
-        }
-        return null;
+        return categoryOptional.orElse(null);
     }
 
     @Override

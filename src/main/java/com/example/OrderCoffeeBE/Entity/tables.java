@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "tables") // Cân nhắc đổi tên tables trong DB nếu cần
+@Table(name = "tables")
 public class tables {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
