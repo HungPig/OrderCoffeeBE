@@ -12,5 +12,4 @@ public interface ProductService {
     products updateProduct(PostProductRequest products, MultipartFile image);
     List<products> searchByName(String keyword);
     void deleteProduct(products product);
-    boolean isNameExist(String name);
 }

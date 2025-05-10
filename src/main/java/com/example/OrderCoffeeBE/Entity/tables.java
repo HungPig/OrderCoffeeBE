@@ -6,19 +6,17 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "orders")
-public class orders {
+@Table(name = "tables")
+public class tables {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer table_id;
-    private Integer items;
     private String status;
-    private int total_amount;
     @CreationTimestamp
     private LocalDateTime createdAt;
+    @CreationTimestamp
+    private LocalDateTime updatedAt;
 }

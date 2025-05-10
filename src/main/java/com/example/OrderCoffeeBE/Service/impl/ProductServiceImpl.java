@@ -80,9 +80,4 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(products product) {
         productRepository.delete(product);
     }
-
-    @Override
-    public boolean isNameExist(String name) {
-        return this.productRepository.existsByName(name);
-    }
 }
