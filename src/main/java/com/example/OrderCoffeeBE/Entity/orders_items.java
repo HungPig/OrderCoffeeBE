@@ -15,7 +15,9 @@ public class orders_items {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "order_id")
     private Integer order_id;
+    @Column(name ="product_id")
     private Integer product_id;
     private int quantity;
     private int subtotal;

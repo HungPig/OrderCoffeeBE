@@ -1,5 +1,6 @@
 package com.example.OrderCoffeeBE.Controller;
 
+import com.example.OrderCoffeeBE.Entity.Request.PostOrderRequest;
 import com.example.OrderCoffeeBE.Entity.orders;
 import com.example.OrderCoffeeBE.Service.impl.OrderServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
@@ -38,14 +39,14 @@ public class OrderController {
 
 
     @PostMapping
-    public ResponseEntity<ApiResponse<orders>> createOrder(@RequestBody orders order) {
+    public ResponseEntity<ApiResponse<orders>> createOrder(@RequestBody PostOrderRequest order) {
         orders newOrders = this.orderService.createOrder(order);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Create Orders Success", newOrders));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders>> updateOrder(@PathVariable int id, @RequestBody orders order) {
+    public ResponseEntity<ApiResponse<orders>> updateOrder(@PathVariable int id, @RequestBody PostOrderRequest order) {
         order.setId(id);
         orders hungOrders = this.orderService.updateOrder(order);
         if (hungOrders == null) {
