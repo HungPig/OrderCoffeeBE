@@ -27,7 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private final TableRepository tableRepository;
     @Override
     public List<orders> findAll() {
-        return ordersRepository.findAll();
+        return ordersRepository.findAllActive();
     }
 
     @Override
@@ -38,8 +38,6 @@ public class OrderServiceImpl implements OrderService {
         if (orderDTO.getItems() == null || orderDTO.getItems().isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item.");
         }
-
-        // Log the request for debugging
         System.out.println("Processing order with items: " + orderDTO.getItems());
         orders order = new orders();
         order.setTable_id(orderDTO.getTable_id());
@@ -49,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
         List<orders_items> orderItemsList = new ArrayList<>();
         for (PostOrderItemRequest itemDTO : orderDTO.getItems()) {
             orders_items item = new orders_items();
-            item.setOrder_id(savedOrder.getId());
+            item.setOrder(savedOrder); // Set the relationship with the saved order
             item.setProduct_id(itemDTO.getProduct_id());
             item.setQuantity(itemDTO.getQuantity());
             item.setSubtotal(itemDTO.getSubtotal());
@@ -58,7 +56,11 @@ public class OrderServiceImpl implements OrderService {
 
             orderItemsList.add(item);
         }
+
+        // Save all order items
         orderItemRepository.saveAll(orderItemsList);
+
+        // Set the items back to the saved order and return it
         savedOrder.setItems(orderItemsList);
         return savedOrder;
     }
@@ -87,7 +89,6 @@ public class OrderServiceImpl implements OrderService {
                 List<orders_items> orderItemsList = new ArrayList<>();
                 for (PostOrderItemRequest itemDTO : orderDTO.getItems()) {
                     orders_items item = new orders_items();
-                    item.setOrder_id(currentOrder.getId());
                     item.setProduct_id(itemDTO.getProduct_id());
                     item.setQuantity(itemDTO.getQuantity());
                     item.setSubtotal(itemDTO.getSubtotal());
@@ -107,14 +108,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(int id) {
-        orderItemRepository.deleteById(id);
-        ordersRepository.deleteById(id);
+    public void sortDeleteOrder(int id) {
+        ordersRepository.softDeleteById(id);
     }
 
     @Override
     public orders findById(int id) {
         return ordersRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Order not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Order not found with ID: " + id));
     }
 }

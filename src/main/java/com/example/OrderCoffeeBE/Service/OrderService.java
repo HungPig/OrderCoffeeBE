@@ -10,6 +10,6 @@ public interface OrderService {
     List<orders> findAll();
     orders createOrder(PostOrderRequest orderDTO);
     orders updateOrder(PostOrderRequest order);
-    void deleteOrder(int id);
+    void sortDeleteOrder(int id);
     orders findById(int id);
 }

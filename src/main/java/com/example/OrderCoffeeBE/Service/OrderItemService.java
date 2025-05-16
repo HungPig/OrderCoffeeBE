@@ -9,5 +9,5 @@ public interface OrderItemService {
     orders_items createOrderItem(orders_items order_item);
     orders_items updateOrderItem(orders_items order_item);
     void deleteOrderItem(int id);
-    orders_items findById(int id);
+    List<orders_items> findActiveItemsByOrderId(Integer orderId);
 }
