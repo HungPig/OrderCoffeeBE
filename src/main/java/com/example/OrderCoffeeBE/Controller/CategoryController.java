@@ -36,15 +36,7 @@ public class CategoryController {
         return ResponseEntity.ok(ApiResponse.success("Get Category Success", fetchCategory));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<categories>>> searchCategory(@RequestParam String keyword) {
-        List<categories> nameCategory = this.categoryService.findByName(keyword);
-        if(nameCategory == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("No categories found"));
-        }
-        return ResponseEntity.ok(ApiResponse.success("Get Category Name Success", nameCategory));
-    }
+
 
     @PostMapping
     public ResponseEntity<ApiResponse<categories>> createCategory(@RequestBody categories category) {

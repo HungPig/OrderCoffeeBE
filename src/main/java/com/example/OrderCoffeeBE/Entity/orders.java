@@ -27,7 +27,8 @@ public class orders {
     private int total_amount;
     @CreationTimestamp
     private LocalDateTime createdAt;
-    private boolean deleted = false; // Xóa mềm
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private int deleted;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<orders_items> items;

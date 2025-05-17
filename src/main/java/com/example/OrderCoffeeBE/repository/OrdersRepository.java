@@ -11,9 +11,14 @@ import java.util.List;
 public interface OrdersRepository extends JpaRepository<orders, Integer> {
     @Modifying
     @Transactional
-    @Query("UPDATE orders o SET o.deleted = true WHERE o.id = :orderId")
-    void softDeleteById(Integer orderId);
+    @Query("UPDATE orders o SET o.deleted = 1 WHERE o.id = :orderId")
+    void softDeleteById(int orderId);
 
-    @Query("SELECT o FROM orders o WHERE o.deleted = false")
-    List<orders> findAllActive();
+    // Fetch all active orders (not deleted)
+    @Query("SELECT o FROM orders o WHERE o.deleted = 0")
+    List<orders> findAllNotDeleted();
+
+    // Fetch all soft-deleted orders
+    @Query("SELECT o FROM orders o WHERE o.deleted = 1")
+    List<orders> findAllDeleted();
 }

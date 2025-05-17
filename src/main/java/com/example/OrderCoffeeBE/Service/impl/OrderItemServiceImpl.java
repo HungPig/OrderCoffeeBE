@@ -26,21 +26,26 @@ public class OrderItemServiceImpl implements OrderItemService {
     public orders_items updateOrderItem(orders_items updateOrder_item) {
         orders_items currentOrder = orderItemRepository.findById(updateOrder_item.getId())
                 .orElseThrow(() -> new NoSuchElementException("Order item not found with ID: " + updateOrder_item.getId()));
+
+        if (updateOrder_item.getProduct_id() == null) {
+            throw new IllegalArgumentException("Product ID cannot be null");
+        }
         currentOrder.setProduct_id(updateOrder_item.getProduct_id());
         currentOrder.setQuantity(updateOrder_item.getQuantity());
         currentOrder.setSubtotal(updateOrder_item.getSubtotal());
-        currentOrder.setStatus(updateOrder_item.getStatus());
         currentOrder.setNotes(updateOrder_item.getNotes());
+
         return orderItemRepository.save(currentOrder);
     }
 
     @Override
     public void deleteOrderItem(int id) {
-        orderItemRepository.softDeleteById(id);
+        orderItemRepository.deleteById(id);
     }
 
     @Override
-    public List<orders_items> findActiveItemsByOrderId(Integer orderId) {
-        return orderItemRepository.findActiveItemsByOrderId(orderId);
+    public orders_items findOrderItemById(int id) {
+        orderItemRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Order item not found with ID: " + id));
+        return orderItemRepository.findById(id).get();
     }
 }

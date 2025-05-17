@@ -31,8 +31,8 @@ public class OrderItemController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<orders_items>> getOrderItemById(@PathVariable int id) {
         try {
-            List<orders_items> orderItem = orderItemService.findActiveItemsByOrderId(id); // Tìm một item cụ thể
-            return ResponseEntity.ok(ApiResponse.success("Fetched order item successfully", (orders_items) orderItem));
+            orders_items orderItem = orderItemService.findOrderItemById(id); // Tìm một item cụ thể
+            return ResponseEntity.ok(ApiResponse.success("Fetched order item successfully",orderItem));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("Order item not found with ID: " + id));
@@ -60,7 +60,6 @@ public class OrderItemController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> deleteOrderItem(@PathVariable int id) {
         try {
-            orderItemService.findActiveItemsByOrderId(id); // Ensure the order item exists
             orderItemService.deleteOrderItem(id);
             return ResponseEntity.ok(ApiResponse.success("Order item deleted successfully", "Order item ID: " + id));
         } catch (NoSuchElementException e) {

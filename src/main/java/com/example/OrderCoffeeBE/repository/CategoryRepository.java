@@ -10,7 +10,4 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<categories, Integer> { ;
     boolean existsByName(String name);
-    @Query("SELECT c FROM categories c WHERE " +
-            "LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    List<categories> findByName(@Param("keyword") String name);
 }

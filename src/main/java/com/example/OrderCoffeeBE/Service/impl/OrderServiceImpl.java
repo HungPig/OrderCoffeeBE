@@ -27,40 +27,39 @@ public class OrderServiceImpl implements OrderService {
     private final TableRepository tableRepository;
     @Override
     public List<orders> findAll() {
-        return ordersRepository.findAllActive();
+        return ordersRepository.findAllNotDeleted();
     }
 
     @Override
     public orders createOrder(PostOrderRequest orderDTO) {
+        // Validate input
         if (orderDTO.getTable_id() == null || orderDTO.getTable_id() <= 0) {
             throw new IllegalArgumentException("Invalid table ID.");
         }
         if (orderDTO.getItems() == null || orderDTO.getItems().isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item.");
         }
-        System.out.println("Processing order with items: " + orderDTO.getItems());
         orders order = new orders();
         order.setTable_id(orderDTO.getTable_id());
         order.setStatus(orderDTO.getStatus());
+        order.setDeleted(0);
         order.setTotal_amount(orderDTO.getTotalAmount());
         orders savedOrder = ordersRepository.save(order);
         List<orders_items> orderItemsList = new ArrayList<>();
         for (PostOrderItemRequest itemDTO : orderDTO.getItems()) {
             orders_items item = new orders_items();
-            item.setOrder(savedOrder); // Set the relationship with the saved order
+            item.setOrder(savedOrder);
             item.setProduct_id(itemDTO.getProduct_id());
             item.setQuantity(itemDTO.getQuantity());
             item.setSubtotal(itemDTO.getSubtotal());
-            item.setStatus(itemDTO.getStatus());
             item.setNotes(itemDTO.getNotes());
-
             orderItemsList.add(item);
         }
 
-        // Save all order items
+        // Lưu các items của đơn hàng
         orderItemRepository.saveAll(orderItemsList);
 
-        // Set the items back to the saved order and return it
+        // Gán items vào đơn hàng và trả về
         savedOrder.setItems(orderItemsList);
         return savedOrder;
     }

@@ -10,6 +10,5 @@ public interface ProductService {
     products findById(int id);
     products createProduct(products products);
     products updateProduct(PostProductRequest products, MultipartFile image);
-    List<products> searchByName(String keyword);
     void deleteProduct(products product);
 }

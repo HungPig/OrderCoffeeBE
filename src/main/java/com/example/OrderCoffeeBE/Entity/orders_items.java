@@ -1,6 +1,7 @@
 package com.example.OrderCoffeeBE.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,4 @@ public class orders_items {
     private String notes;
     @CreationTimestamp
     private LocalDateTime createdAt;
-    private boolean deleted = false;
 }
