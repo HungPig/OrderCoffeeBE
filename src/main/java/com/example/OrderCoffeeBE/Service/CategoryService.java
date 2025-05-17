@@ -11,5 +11,4 @@ public interface CategoryService {
      categories updateCate(categories categories);
      void deleteCate(int id);
      boolean isNameExist(String name);
-     List<categories> findByName(String keyword);
 }
