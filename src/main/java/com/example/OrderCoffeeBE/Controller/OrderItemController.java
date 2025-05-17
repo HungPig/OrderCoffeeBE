@@ -9,58 +9,62 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/orderItem")
+@RequestMapping("/api/orderItems")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class OrderItemController {
-    private final OrderItemServiceImpl OrderItemService;
+    private final OrderItemServiceImpl orderItemService;
+
     @GetMapping
     public ResponseEntity<ApiResponse<List<orders_items>>> getAllOrderItems() {
-        List<orders_items> orders_items = OrderItemService.findAll();
-        if(orders_items.isEmpty()) {
+        List<orders_items> items = orderItemService.findAll();
+        if (items.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("No  OrderItem found"));
+                    .body(ApiResponse.error("No order items found"));
         }
-        return ResponseEntity.ok(ApiResponse.success("Get  OrderItem Success", orders_items));
+        return ResponseEntity.ok(ApiResponse.success("Fetched all order items successfully", items));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders_items>> getOrdersById(@PathVariable int id) {
-        orders_items fetchOrders = this.OrderItemService.findById(id);
-        if(fetchOrders == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("orders not found " + id));
+    public ResponseEntity<ApiResponse<orders_items>> getOrderItemById(@PathVariable int id) {
+        try {
+            orders_items orderItem = orderItemService.findOrderItemById(id); // Tìm một item cụ thể
+            return ResponseEntity.ok(ApiResponse.success("Fetched order item successfully",orderItem));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Order item not found with ID: " + id));
         }
-        return ResponseEntity.ok(ApiResponse.success("Get orders Success", fetchOrders));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<orders_items>> createOrders(@RequestBody orders_items orders) {
-        orders_items neworders = this.OrderItemService.createOrderItem(orders);
+    public ResponseEntity<ApiResponse<orders_items>> createOrderItem(@RequestBody orders_items orderItem) {
+        orders_items newOrderItem = orderItemService.createOrderItem(orderItem);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Create orders Success", neworders));
+                .body(ApiResponse.success("Order item created successfully", newOrderItem));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders_items>> updateOrders(@PathVariable int id, @RequestBody orders_items orders)  {
-        orders.setId(id);
-        orders_items hungOrders = this.OrderItemService.updateOrderItem(orders);
-        if (hungOrders == null) {
+    public ResponseEntity<ApiResponse<orders_items>> updateOrderItem(@PathVariable int id, @RequestBody orders_items orderItem) {
+        orderItem.setId(id);
+        orders_items updatedOrderItem = orderItemService.updateOrderItem(orderItem);
+        if (updatedOrderItem == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("orders not found"));
+                    .body(ApiResponse.error("Order item not found with ID: " + id));
         }
-        return ResponseEntity.ok(ApiResponse.success("Update orders Success", hungOrders));
+        return ResponseEntity.ok(ApiResponse.success("Order item updated successfully", updatedOrderItem));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders_items>> deleteorders(@PathVariable int id) {
-        orders_items currentOrders = this.OrderItemService.findById(id);
-        if (currentOrders == null) {
+    public ResponseEntity<ApiResponse<String>> deleteOrderItem(@PathVariable int id) {
+        try {
+            orderItemService.deleteOrderItem(id);
+            return ResponseEntity.ok(ApiResponse.success("Order item deleted successfully", "Order item ID: " + id));
+        } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("orders not found" + id));
+                    .body(ApiResponse.error("Order item not found with ID: " + id));
         }
-        this.OrderItemService.deleteOrderItem(id);
-        return ResponseEntity.ok(ApiResponse.success("Delete orders Success", currentOrders));
     }
 }

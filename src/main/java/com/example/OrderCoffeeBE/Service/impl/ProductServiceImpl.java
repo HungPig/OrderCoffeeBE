@@ -70,10 +70,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(current);
     }
 
-    @Override
-    public List<products> searchByName(String keyword) {
-       return  productRepository.findByName(keyword);
-    }
+
 
 
     @Override

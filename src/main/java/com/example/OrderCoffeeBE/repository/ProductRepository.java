@@ -11,7 +11,4 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<products, Integer> { ;
     boolean existsByName(String name);
-    @Query("SELECT c FROM products c WHERE " +
-            "LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    List<products> findByName(@Param("keyword") String name);
 }
