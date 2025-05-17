@@ -20,12 +20,12 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<orders>>> getAllOrder() {
-        List<orders> categories = orderService.findAll();
-        if (categories.isEmpty()) {
+        List<orders> orders = orderService.findAll();
+        if (orders.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("No Order found"));
         }
-        return ResponseEntity.ok(ApiResponse.success("Get Order Success", categories));
+        return ResponseEntity.ok(ApiResponse.success("Get Order Success", orders));
     }
 
     @GetMapping("/{id}")
@@ -63,7 +63,7 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("Order not found" + id));
         }
-        this.orderService.deleteOrder(id);
+        this.orderService.sortDeleteOrder(id);
         return ResponseEntity.ok(ApiResponse.success("Delete Order Success", currentOrder));
     }
 }

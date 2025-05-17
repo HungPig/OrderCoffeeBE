@@ -43,16 +43,6 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("Get Product success", findProduct));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<products>>> searchProduct(@RequestParam String keyword) {
-        List<products> nameCategory = this.productService.searchByName(keyword);
-        if(nameCategory == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("No Product found"));
-        }
-        return ResponseEntity.ok(ApiResponse.success("Get Product Name Success", nameCategory));
-    }
-
     @PostMapping
     public ResponseEntity<ApiResponse<products>> createProduct(@ModelAttribute PostProductRequest requestProduct, MultipartFile image) throws IOException {
         String originalFilename = image.getOriginalFilename();
