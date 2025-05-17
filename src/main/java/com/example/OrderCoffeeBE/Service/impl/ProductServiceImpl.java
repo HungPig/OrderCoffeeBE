@@ -70,19 +70,11 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(current);
     }
 
-    @Override
-    public List<products> searchByName(String keyword) {
-       return  productRepository.findByName(keyword);
-    }
+
 
 
     @Override
     public void deleteProduct(products product) {
         productRepository.delete(product);
-    }
-
-    @Override
-    public boolean isNameExist(String name) {
-        return this.productRepository.existsByName(name);
     }
 }
