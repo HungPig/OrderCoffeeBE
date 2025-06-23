@@ -46,6 +46,9 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponse.error("Category name already exists"));
         }
+        if(category.getName() == null || category.getName().isEmpty()) {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error("Category name cannot be empty"));
+        }
         categories newCategory = this.categoryService.createCate(category);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Create Category Success", newCategory));
