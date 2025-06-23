@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>OrderCoffeeBE</name>
 	<description>This Is OrderCoffee</description>
+	<packaging>war</packaging>
 	<url/>
 	<licenses>
 		<license/>
