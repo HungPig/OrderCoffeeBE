@@ -3,11 +3,11 @@ FROM maven:3.9.9-amazoncorretto-17-debian AS build
 
 WORKDIR /app
 
-COPY ./server/OrderCoffeeBE/pom.xml .
+COPY ./OrderCoffeeBE/pom.xml .
 
 RUN mvn dependency:go-offline -B
 
-COPY ./server/OrderCoffeeBE/src ./src
+COPY ./OrderCoffeeBE/src ./src
 
 RUN mvn package -DskipTests
 
