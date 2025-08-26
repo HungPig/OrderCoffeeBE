@@ -1,16 +1,13 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
-import com.example.OrderCoffeeBE.Entity.Request.PostOrderItemRequest;
-import com.example.OrderCoffeeBE.Entity.Request.PostOrderRequest;
+import com.example.OrderCoffeeBE.Entity.Request.Order.PostOrderItemRequest;
+import com.example.OrderCoffeeBE.Entity.Request.Order.PostOrderRequest;
 import com.example.OrderCoffeeBE.Entity.orders;
 import com.example.OrderCoffeeBE.Entity.orders_items;
-import com.example.OrderCoffeeBE.Entity.products;
 import com.example.OrderCoffeeBE.Service.OrderService;
 import com.example.OrderCoffeeBE.repository.OrderItemRepository;
 import com.example.OrderCoffeeBE.repository.OrdersRepository;
 import com.example.OrderCoffeeBE.repository.TableRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

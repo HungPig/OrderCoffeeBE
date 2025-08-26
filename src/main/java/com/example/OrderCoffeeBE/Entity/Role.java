@@ -1,5 +1,6 @@
 package com.example.OrderCoffeeBE.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,12 +9,13 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "roles")
-public class role {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "description")
     private String description;
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "Role", fetch = FetchType.LAZY)
+    @JsonIgnore
     List<user> users;
 }

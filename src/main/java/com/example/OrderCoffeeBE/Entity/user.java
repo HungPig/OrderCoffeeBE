@@ -1,5 +1,6 @@
 package com.example.OrderCoffeeBE.Entity;
 
+import com.example.OrderCoffeeBE.Util.GenderEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,9 +20,10 @@ public class user {
     @Column(name = "age", length = 3)
     private Integer age;
     @Column(name = "gender")
-    private Integer gender;
+    @Enumerated(EnumType.ORDINAL) // MALE = 0 , FEMALE 1
+    private GenderEnum gender;
     private boolean isActive = true;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
-    private role role;
+    @ManyToOne()
+    @JoinColumn(name = "role_id")
+    private Role Role;
 }

@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Controller;
 
-import com.example.OrderCoffeeBE.Entity.Request.PostOrderRequest;
+import com.example.OrderCoffeeBE.Entity.Request.Order.PostOrderRequest;
 import com.example.OrderCoffeeBE.Entity.orders;
 import com.example.OrderCoffeeBE.Service.impl.OrderServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
