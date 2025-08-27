@@ -1,13 +1,12 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
-import com.example.OrderCoffeeBE.Entity.categories;
+import com.example.OrderCoffeeBE.Entity.Category;
 import com.example.OrderCoffeeBE.Service.CategoryService;
 import com.example.OrderCoffeeBE.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -16,28 +15,28 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<categories> getAllCategories() {
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
     @Override
-    public categories findByIdCate(int id) {
-        Optional<categories> categoryOptional = categoryRepository.findById(id);
+    public Category findByIdCate(int id) {
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
         return categoryOptional.orElse(null);
     }
 
     @Override
-    public categories createCate(categories categories) {
-        return categoryRepository.save(categories);
+    public Category createCate(Category Category) {
+        return categoryRepository.save(Category);
     }
 
     @Override
-    public categories updateCate(categories updateCategories) {
-        categories currentCate = this.findByIdCate(updateCategories.getId());
+    public Category updateCate(Category updateCategory) {
+        Category currentCate = this.findByIdCate(updateCategory.getId());
         if (currentCate == null) {
             return null;
         }
-        currentCate.setName(updateCategories.getName());
+        currentCate.setName(updateCategory.getName());
         return this.categoryRepository.save(currentCate);
     }
 

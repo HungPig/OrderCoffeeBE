@@ -4,8 +4,6 @@ import com.example.OrderCoffeeBE.Util.GenderEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.management.relation.Role;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -15,5 +13,5 @@ public class PostUserRequest {
     private String email;
     private Integer age;
     private GenderEnum gender;
-    private Role role;
+    private RoleUser role;
 }

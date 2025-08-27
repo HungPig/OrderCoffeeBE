@@ -1,7 +1,7 @@
 package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.Request.Order.PostOrderRequest;
-import com.example.OrderCoffeeBE.Entity.orders;
+import com.example.OrderCoffeeBE.Entity.Order;
 import com.example.OrderCoffeeBE.Service.impl.OrderServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,18 +19,18 @@ public class OrderController {
     private final OrderServiceImpl orderService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<orders>>> getAllOrder() {
-        List<orders> orders = orderService.findAll();
-        if (orders.isEmpty()) {
+    public ResponseEntity<ApiResponse<List<Order>>> getAllOrder() {
+        List<Order> Order = orderService.findAll();
+        if (Order.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("No Order found"));
         }
-        return ResponseEntity.ok(ApiResponse.success("Get Order Success", orders));
+        return ResponseEntity.ok(ApiResponse.success("Get Order Success", Order));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders>> getOrderById(@PathVariable int id) {
-        orders fetchCategory = this.orderService.findById(id);
+    public ResponseEntity<ApiResponse<Order>> getOrderById(@PathVariable int id) {
+        Order fetchCategory = this.orderService.findById(id);
         if (fetchCategory == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("Order not found " + id));
         }
@@ -39,26 +39,26 @@ public class OrderController {
 
 
     @PostMapping
-    public ResponseEntity<ApiResponse<orders>> createOrder(@RequestBody PostOrderRequest order) {
-        orders newOrders = this.orderService.createOrder(order);
+    public ResponseEntity<ApiResponse<Order>> createOrder(@RequestBody PostOrderRequest order) {
+        Order newOrder = this.orderService.createOrder(order);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Create Orders Success", newOrders));
+                .body(ApiResponse.success("Create Orders Success", newOrder));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders>> updateOrder(@PathVariable int id, @RequestBody PostOrderRequest order) {
+    public ResponseEntity<ApiResponse<Order>> updateOrder(@PathVariable int id, @RequestBody PostOrderRequest order) {
         order.setId(id);
-        orders hungOrders = this.orderService.updateOrder(order);
-        if (hungOrders == null) {
+        Order hungOrder = this.orderService.updateOrder(order);
+        if (hungOrder == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("Order not found"));
         }
-        return ResponseEntity.ok(ApiResponse.success("Update Order Success", hungOrders));
+        return ResponseEntity.ok(ApiResponse.success("Update Order Success", hungOrder));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders>> deleteOrder(@PathVariable int id) {
-        orders currentOrder = this.orderService.findById(id);
+    public ResponseEntity<ApiResponse<Order>> deleteOrder(@PathVariable int id) {
+        Order currentOrder = this.orderService.findById(id);
         if (currentOrder == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("Order not found" + id));

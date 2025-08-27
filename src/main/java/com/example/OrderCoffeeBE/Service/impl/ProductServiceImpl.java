@@ -1,7 +1,7 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
 import com.example.OrderCoffeeBE.Entity.Request.PostProductRequest;
-import com.example.OrderCoffeeBE.Entity.products;
+import com.example.OrderCoffeeBE.Entity.Product;
 import com.example.OrderCoffeeBE.Service.ProductService;
 import com.example.OrderCoffeeBE.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.example.OrderCoffeeBE.Controller.ProductController.uploadDirectory;
 
@@ -24,24 +23,24 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<products> findAll() {
+    public List<Product> findAll() {
         return productRepository.findAll();
     }
 
     @Override
-    public products findById(int id) {
+    public Product findById(int id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
     }
 
     @Override
-    public products createProduct(products product) {
+    public Product createProduct(Product product) {
         return productRepository.save(product);
     }
 
     @Override
-    public products updateProduct(PostProductRequest updateProduct, MultipartFile image) {
-        products current = this.findById(updateProduct.getId());
+    public Product updateProduct(PostProductRequest updateProduct, MultipartFile image) {
+        Product current = this.findById(updateProduct.getId());
         if (updateProduct.getName() != null) {
             current.setName(updateProduct.getName());
         }
@@ -74,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public void deleteProduct(products product) {
+    public void deleteProduct(Product product) {
         productRepository.delete(product);
     }
 }

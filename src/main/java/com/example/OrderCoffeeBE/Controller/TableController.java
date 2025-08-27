@@ -1,9 +1,7 @@
 package com.example.OrderCoffeeBE.Controller;
 
-import com.example.OrderCoffeeBE.Entity.categories;
-import com.example.OrderCoffeeBE.Entity.tables;
+import com.example.OrderCoffeeBE.Entity.Tables;
 import com.example.OrderCoffeeBE.Service.impl.TableServiceImpl;
-import com.example.OrderCoffeeBE.repository.TableRepository;
 import com.example.OrderCoffeeBE.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,28 +17,28 @@ import java.util.List;
 public class TableController {
     private final TableServiceImpl tableService;
     @GetMapping
-    public ResponseEntity<ApiResponse<List<tables>>> getTables() {
-        List<tables> TableEntities = tableService.findAll();
+    public ResponseEntity<ApiResponse<List<Tables>>> getTables() {
+        List<Tables> TableEntities = tableService.findAll();
         return ResponseEntity.ok(ApiResponse.success("GET Tables success", TableEntities));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<tables>> getTableById(@PathVariable int id) {
-       tables findTables = tableService.findById(id);
+    public ResponseEntity<ApiResponse<Tables>> getTableById(@PathVariable int id) {
+       Tables findTables = tableService.findById(id);
        if(findTables == null) {
            return ResponseEntity.ok(ApiResponse.error("Table not found"));
        }
         return ResponseEntity.ok(ApiResponse.success("GET Table success", findTables));
     }
     @PostMapping
-    public ResponseEntity<ApiResponse<tables>> addTable(@RequestBody tables tables) {
-        tables newTables = this.tableService.createTable(tables);
+    public ResponseEntity<ApiResponse<Tables>> addTable(@RequestBody Tables tables) {
+        Tables newTables = this.tableService.createTable(tables);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Create Category Success", newTables));
     }
     @PatchMapping()
-    public ResponseEntity<ApiResponse<tables>> updateTable(@PathVariable int id, @RequestBody tables table) {
+    public ResponseEntity<ApiResponse<Tables>> updateTable(@PathVariable int id, @RequestBody Tables table) {
         table.setId(id);
-        tables hungTable = this.tableService.updateTable(table);
+        Tables hungTable = this.tableService.updateTable(table);
         if (hungTable == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error("Category not found"));
@@ -48,8 +46,8 @@ public class TableController {
         return ResponseEntity.ok(ApiResponse.success("Update Category Success", hungTable));
     }
     @DeleteMapping()
-    public ResponseEntity<ApiResponse<tables>> deleteTable(@RequestParam int id) {
-        tables currentTables = this.tableService.findById(id);
+    public ResponseEntity<ApiResponse<Tables>> deleteTable(@RequestParam int id) {
+        Tables currentTables = this.tableService.findById(id);
         if (currentTables != null) {
             this.tableService.deleteTable(id);
             return ResponseEntity.ok(ApiResponse.success("Delete Product success", null));

@@ -5,11 +5,11 @@ import com.example.OrderCoffeeBE.Entity.Request.User.PostUserRequest;
 import com.example.OrderCoffeeBE.Entity.Request.User.UpdateUserRequest;
 import com.example.OrderCoffeeBE.Entity.Role;
 import com.example.OrderCoffeeBE.Entity.dto.UpdateUserDTO;
-import com.example.OrderCoffeeBE.Entity.user;
+import com.example.OrderCoffeeBE.Entity.User;
+import com.example.OrderCoffeeBE.Service.RoleService;
 import com.example.OrderCoffeeBE.Service.UserService;
 import com.example.OrderCoffeeBE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,23 +19,28 @@ import java.util.Optional;
 @Service("UserService")
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
     @Override
-    public List<user> getAllUser() {
+    public List<User> getAllUser() {
         return userRepository.findAll();
     }
 
     @Override
-    public PostUserRequest createUser(user user) {
+    public PostUserRequest createUser(User user) {
+        if(user.getRole() != null){
+            Role role = this.roleService.fetchRoleById(user.getRole().getId());
+            user.setRole(role);
+        }
         return UserConvert.convertToResCreatedUserRes(this.userRepository.save(user));
     }
 
     @Override
     public UpdateUserRequest updateUser(int id , UpdateUserDTO user) {
 
-        Optional<user> userOptional = this.userRepository.findById(id);
+        Optional<User> userOptional = this.userRepository.findById(id);
         if(userOptional.isPresent())
         {
-            user currentUser = userOptional.get();
+            User currentUser = userOptional.get();
             currentUser.setName(user.getName());
             currentUser.setEmail(user.getEmail());
             currentUser.setAge(user.getAge());

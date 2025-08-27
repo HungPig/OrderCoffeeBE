@@ -1,33 +1,22 @@
 package com.example.OrderCoffeeBE.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-
-
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class products {
+@Table(name = "tables")
+public class Tables {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    private String name;
-    private String description;
-    private Integer price;
-    private String image;
-
+    private String status;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @CreationTimestamp
     private LocalDateTime updatedAt;
-    private Integer status;
-    private Integer category_id;
 }
-

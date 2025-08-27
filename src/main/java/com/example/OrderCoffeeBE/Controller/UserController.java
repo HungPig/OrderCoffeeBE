@@ -3,9 +3,9 @@ package com.example.OrderCoffeeBE.Controller;
 import com.example.OrderCoffeeBE.Entity.Request.User.PostUserRequest;
 import com.example.OrderCoffeeBE.Entity.Request.User.UpdateUserRequest;
 import com.example.OrderCoffeeBE.Entity.dto.UpdateUserDTO;
-import com.example.OrderCoffeeBE.Entity.user;
+import com.example.OrderCoffeeBE.Entity.User;
 import com.example.OrderCoffeeBE.Service.impl.UserServiceImpl;
-import com.example.OrderCoffeeBE.response.ApiResponse;
+import com.example.OrderCoffeeBE.Util.Anotation.ApiMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +20,12 @@ import java.util.List;
 public class UserController {
     private final UserServiceImpl userService;
     @GetMapping
-    public ResponseEntity<ApiResponse<List<user>>> getUser() {
-        List<user> userList = userService.getAllUser();
-        return ResponseEntity.ok(ApiResponse.success("GET User success", userList));
+    @ApiMessage("fetch all User")
+    public ResponseEntity<List<User>> getUser() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.getAllUser());
     }
     @PostMapping
-    public ResponseEntity<PostUserRequest> addUser( @RequestBody user user) {
+    public ResponseEntity<PostUserRequest> addUser( @RequestBody User user) {
         PostUserRequest newUser = this.userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }

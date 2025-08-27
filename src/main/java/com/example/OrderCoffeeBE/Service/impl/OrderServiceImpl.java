@@ -2,8 +2,8 @@ package com.example.OrderCoffeeBE.Service.impl;
 
 import com.example.OrderCoffeeBE.Entity.Request.Order.PostOrderItemRequest;
 import com.example.OrderCoffeeBE.Entity.Request.Order.PostOrderRequest;
-import com.example.OrderCoffeeBE.Entity.orders;
-import com.example.OrderCoffeeBE.Entity.orders_items;
+import com.example.OrderCoffeeBE.Entity.Order;
+import com.example.OrderCoffeeBE.Entity.OrderItem;
 import com.example.OrderCoffeeBE.Service.OrderService;
 import com.example.OrderCoffeeBE.repository.OrderItemRepository;
 import com.example.OrderCoffeeBE.repository.OrdersRepository;
@@ -23,12 +23,12 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final TableRepository tableRepository;
     @Override
-    public List<orders> findAll() {
+    public List<Order> findAll() {
         return ordersRepository.findAllNotDeleted();
     }
 
     @Override
-    public orders createOrder(PostOrderRequest orderDTO) {
+    public Order createOrder(PostOrderRequest orderDTO) {
         // Validate input
         if (orderDTO.getTable_id() == null || orderDTO.getTable_id() <= 0) {
             throw new IllegalArgumentException("Invalid table ID.");
@@ -36,15 +36,15 @@ public class OrderServiceImpl implements OrderService {
         if (orderDTO.getItems() == null || orderDTO.getItems().isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item.");
         }
-        orders order = new orders();
+        Order order = new Order();
         order.setTable_id(orderDTO.getTable_id());
         order.setStatus(orderDTO.getStatus());
         order.setDeleted(0);
         order.setTotal_amount(orderDTO.getTotalAmount());
-        orders savedOrder = ordersRepository.save(order);
-        List<orders_items> orderItemsList = new ArrayList<>();
+        Order savedOrder = ordersRepository.save(order);
+        List<OrderItem> orderItemsList = new ArrayList<>();
         for (PostOrderItemRequest itemDTO : orderDTO.getItems()) {
-            orders_items item = new orders_items();
+            OrderItem item = new OrderItem();
             item.setOrder(savedOrder);
             item.setProduct_id(itemDTO.getProduct_id());
             item.setQuantity(itemDTO.getQuantity());
@@ -61,10 +61,10 @@ public class OrderServiceImpl implements OrderService {
         return savedOrder;
     }
     @Override
-    public orders updateOrder(PostOrderRequest orderDTO) {
-        Optional<orders> optionalOrder = ordersRepository.findById(orderDTO.getId());
+    public Order updateOrder(PostOrderRequest orderDTO) {
+        Optional<Order> optionalOrder = ordersRepository.findById(orderDTO.getId());
         if (optionalOrder.isPresent()) {
-            orders currentOrder = optionalOrder.get();
+            Order currentOrder = optionalOrder.get();
             // Chỉ cập nhật table_id nếu giá trị không null và hợp lệ
             if (orderDTO.getTable_id() != null) {
                 // Kiểm tra table_id có tồn tại trong bảng tables
@@ -82,9 +82,9 @@ public class OrderServiceImpl implements OrderService {
             }
             if (orderDTO.getItems() != null) {
                 orderItemRepository.deleteById(currentOrder.getId());
-                List<orders_items> orderItemsList = new ArrayList<>();
+                List<OrderItem> orderItemsList = new ArrayList<>();
                 for (PostOrderItemRequest itemDTO : orderDTO.getItems()) {
-                    orders_items item = new orders_items();
+                    OrderItem item = new OrderItem();
                     item.setProduct_id(itemDTO.getProduct_id());
                     item.setQuantity(itemDTO.getQuantity());
                     item.setSubtotal(itemDTO.getSubtotal());
@@ -109,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public orders findById(int id) {
+    public Order findById(int id) {
         return ordersRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Order not found with ID: " + id));
     }
