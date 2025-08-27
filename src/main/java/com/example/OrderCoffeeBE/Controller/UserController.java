@@ -1,6 +1,8 @@
 package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Entity.Request.User.PostUserRequest;
+import com.example.OrderCoffeeBE.Entity.Request.User.UpdateUserRequest;
+import com.example.OrderCoffeeBE.Entity.dto.UpdateUserDTO;
 import com.example.OrderCoffeeBE.Entity.user;
 import com.example.OrderCoffeeBE.Service.impl.UserServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
@@ -27,25 +29,15 @@ public class UserController {
         PostUserRequest newUser = this.userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
-//    @PatchMapping()
-//    public ResponseEntity<ApiResponse<tables>> updateTable(@PathVariable int id, @RequestBody tables table) {
-//        table.setId(id);
-//        tables hungTable = this.tableService.updateTable(table);
-//        if (hungTable == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(ApiResponse.error("Category not found"));
-//        }
-//        return ResponseEntity.ok(ApiResponse.success("Update Category Success", hungTable));
-//    }
-//    @DeleteMapping()
-//    public ResponseEntity<ApiResponse<tables>> deleteTable(@RequestParam int id) {
-//        tables currentTables = this.tableService.findById(id);
-//        if (currentTables != null) {
-//            this.tableService.deleteTable(id);
-//            return ResponseEntity.ok(ApiResponse.success("Delete Product success", null));
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(ApiResponse.error("Product not found"));
-//        }
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateUserRequest> updateUser(@PathVariable int id, @RequestBody UpdateUserDTO user) {
+       return ResponseEntity.ok(this.userService.updateUser(id,user));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(
+            @PathVariable("id") int id
+    ) throws Exception {
+        this.userService.deleteUser(id);
+        return ResponseEntity.ok(null);
+    }
 }
