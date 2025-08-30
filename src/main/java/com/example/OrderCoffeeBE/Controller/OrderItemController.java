@@ -14,7 +14,6 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/api/orderItems")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class OrderItemController {
     private final OrderItemServiceImpl orderItemService;
 

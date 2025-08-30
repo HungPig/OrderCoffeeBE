@@ -1,8 +1,10 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
-import com.example.OrderCoffeeBE.Entity.Request.PostProductRequest;
+import com.example.OrderCoffeeBE.Dto.Product.PostProductDTO;
+import com.example.OrderCoffeeBE.Dto.Product.ProductDTO;
 import com.example.OrderCoffeeBE.Entity.Product;
 import com.example.OrderCoffeeBE.Service.ProductService;
+import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
 import com.example.OrderCoffeeBE.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,13 +17,11 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static com.example.OrderCoffeeBE.Controller.ProductController.uploadDirectory;
-
 @RequiredArgsConstructor
 @Service("productService")
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
-
+    public static String uploadDirectory = System.getProperty("user.dir") + "/access/products";
     @Override
     public List<Product> findAll() {
         return productRepository.findAll();
@@ -34,46 +34,71 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(Product product) {
+    public Product createProduct(PostProductDTO request ,MultipartFile image) throws IOException {
+        String originalFilename = image.getOriginalFilename();
+        Path path = Paths.get(uploadDirectory, originalFilename);
+        Files.write(path, image.getBytes());
+        // 2. Map DTO -> Entity
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setStatus(request.getStatus());
+        product.setCategory_id(request.getCategory_id());
+        product.setImage(originalFilename);
+        // 3. Save DB
         return productRepository.save(product);
     }
 
     @Override
-    public Product updateProduct(PostProductRequest updateProduct, MultipartFile image) {
-        Product current = this.findById(updateProduct.getId());
-        if (updateProduct.getName() != null) {
-            current.setName(updateProduct.getName());
+    public ProductDTO updateProduct(int id, ProductDTO ProductDTO, MultipartFile image) throws IOException {
+        if(ProductDTO == null)
+        {
+            throw new ResourceNotFoundException("Product is required");
         }
-        if (updateProduct.getPrice() != null) {
-            current.setPrice(updateProduct.getPrice());
+        var existedProduct = productRepository.findByName(ProductDTO.getName());
+        if (existedProduct != null && !existedProduct.getId().equals(id)) {
+            throw new ResourceNotFoundException("Product name is existed");
         }
-        if (updateProduct.getDescription() != null) {
-            current.setDescription(updateProduct.getDescription());
-        }
-        if (updateProduct.getCategory_id() != null) {
-            current.setCategory_id(updateProduct.getCategory_id());
-        }
-        if (updateProduct.getStatus() != null) {
-            current.setStatus(updateProduct.getStatus());
+        //update Product
+        var product = productRepository.findById(id).orElse(null);
+        if (product == null)
+        {
+            throw new ResourceNotFoundException("Product Not Found");
         }
         if (image != null && !image.isEmpty()) {
             try {
                 String fileName = image.getOriginalFilename();
                 Path path = Paths.get(uploadDirectory, fileName);
                 Files.write(path, image.getBytes());
-                current.setImage(fileName);
+                product.setImage(fileName);
             } catch (IOException e) {
-                throw new RuntimeException("Error Save Image: " + e.getMessage());
+                throw new ResourceNotFoundException("Error Save Image: " + e.getMessage());
             }
         }
-        return productRepository.save(current);
+        product.setName(ProductDTO.getName());
+        product.setDescription(ProductDTO.getDescription());
+        product.setPrice(ProductDTO.getPrice());
+        product.setStatus(ProductDTO.getStatus());
+        product.setCategory_id(ProductDTO.getCategory_id());
+        product = productRepository.save(product);
+        //convert to dto
+        var updateProductDTO = new ProductDTO();
+        updateProductDTO.setId(product.getId());
+        updateProductDTO.setName(product.getName());
+        updateProductDTO.setDescription(product.getDescription());
+        updateProductDTO.setPrice(product.getPrice());
+        updateProductDTO.setStatus(product.getStatus());
+        updateProductDTO.setCategory_id(product.getCategory_id());
+        return updateProductDTO;
     }
 
-
-
-
     @Override
-    public void deleteProduct(Product product) {
-        productRepository.delete(product);
+    public void deleteProduct(int id) {
+        var category = productRepository.findById(id).orElse(null);
+        if (category == null) {
+            throw new ResourceNotFoundException("Product not found");
+        }
+        this.productRepository.deleteById(id);
     }
 }

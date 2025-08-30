@@ -1,4 +1,4 @@
-package com.example.OrderCoffeeBE.Entity.dto;
+package com.example.OrderCoffeeBE.Dto;
 
 import com.example.OrderCoffeeBE.Entity.Role;
 import com.example.OrderCoffeeBE.Util.Contant.GenderEnum;

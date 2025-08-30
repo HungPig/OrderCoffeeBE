@@ -4,7 +4,7 @@ import com.example.OrderCoffeeBE.Convert.UserConvert;
 import com.example.OrderCoffeeBE.Entity.Request.User.PostUserRequest;
 import com.example.OrderCoffeeBE.Entity.Request.User.UpdateUserRequest;
 import com.example.OrderCoffeeBE.Entity.Role;
-import com.example.OrderCoffeeBE.Entity.dto.UpdateUserDTO;
+import com.example.OrderCoffeeBE.Dto.UpdateUserDTO;
 import com.example.OrderCoffeeBE.Entity.User;
 import com.example.OrderCoffeeBE.Service.RoleService;
 import com.example.OrderCoffeeBE.Service.UserService;

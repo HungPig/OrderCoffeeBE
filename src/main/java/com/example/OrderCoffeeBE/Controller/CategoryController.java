@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class CategoryController {
     private final CategoryServiceImpl categoryService;
 
@@ -36,7 +35,7 @@ public class CategoryController {
     @ApiMessage("Create Categories")
     public ResponseEntity<Category> createCategory(@RequestBody Category category) throws ResourceNotFoundException {
         Category newCategory = this.categoryService.createCate(category);
-        return ResponseEntity.status(HttpStatus.OK).body(newCategory);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);
     }
 
     @PatchMapping("/{id}")
@@ -49,7 +48,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     @ApiMessage("Delete Categories")
-    public ResponseEntity<Category> deleteCategory(@PathVariable int id) throws Exception{
+    public ResponseEntity<Category> deleteCategory(@PathVariable int id){
         this.categoryService.deleteCate(id);
         return ResponseEntity.ok(null);
     }
