@@ -1,7 +1,7 @@
 package com.example.OrderCoffeeBE.Entity.dto;
 
 import com.example.OrderCoffeeBE.Entity.Role;
-import com.example.OrderCoffeeBE.Util.GenderEnum;
+import com.example.OrderCoffeeBE.Util.Contant.GenderEnum;
 import lombok.Data;
 
 @Data

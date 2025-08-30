@@ -10,5 +10,4 @@ public interface CategoryService {
      Category createCate(Category Category);
      Category updateCate(Category Category);
      void deleteCate(int id);
-     boolean isNameExist(String name);
 }

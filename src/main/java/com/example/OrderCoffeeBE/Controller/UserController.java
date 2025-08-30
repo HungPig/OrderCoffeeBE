@@ -25,15 +25,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(this.userService.getAllUser());
     }
     @PostMapping
+    @ApiMessage("Create User")
     public ResponseEntity<PostUserRequest> addUser( @RequestBody User user) {
         PostUserRequest newUser = this.userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
     @PutMapping("/{id}")
+    @ApiMessage("Update User")
     public ResponseEntity<UpdateUserRequest> updateUser(@PathVariable int id, @RequestBody UpdateUserDTO user) {
        return ResponseEntity.ok(this.userService.updateUser(id,user));
     }
     @DeleteMapping("/{id}")
+    @ApiMessage("Delete User")
     public ResponseEntity<Void> deleteUser(
             @PathVariable("id") int id
     ) throws Exception {

@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Entity;
 
-import com.example.OrderCoffeeBE.Util.GenderEnum;
+import com.example.OrderCoffeeBE.Util.Contant.GenderEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
