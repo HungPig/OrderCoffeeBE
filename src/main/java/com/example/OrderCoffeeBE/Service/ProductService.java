@@ -11,6 +11,6 @@ public interface ProductService {
     List<Product> findAll();
     Product findById(int id);
     Product createProduct(PostProductDTO request ,MultipartFile image) throws IOException;
-    ProductDTO updateProduct(int id, ProductDTO ProductDTO, MultipartFile image) throws IOException;
+    Product updateProduct(int id, ProductDTO product, MultipartFile image) throws IOException;
     void deleteProduct(int id);
 }

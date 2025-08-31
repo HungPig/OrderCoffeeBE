@@ -18,14 +18,14 @@ public class Product {
 
     private String name;
     private String description;
-    private Integer price;
+    private int price;
     private String image;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
     @CreationTimestamp
     private LocalDateTime updatedAt;
-    private Integer status;
-    private Integer category_id;
+    private int status;
+    private int category_id;
 }
 

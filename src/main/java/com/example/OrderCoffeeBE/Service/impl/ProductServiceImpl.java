@@ -51,46 +51,41 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO updateProduct(int id, ProductDTO ProductDTO, MultipartFile image) throws IOException {
-        if(ProductDTO == null)
+    public Product updateProduct(int id, ProductDTO productDTO, MultipartFile image) throws IOException {
+        if(productDTO == null)
         {
             throw new ResourceNotFoundException("Product is required");
         }
-        var existedProduct = productRepository.findByName(ProductDTO.getName());
+        var existedProduct = productRepository.findByName(productDTO.getName());
         if (existedProduct != null && !existedProduct.getId().equals(id)) {
             throw new ResourceNotFoundException("Product name is existed");
         }
+        var dbProduct  = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
         //update Product
-        var product = productRepository.findById(id).orElse(null);
-        if (product == null)
-        {
-            throw new ResourceNotFoundException("Product Not Found");
-        }
         if (image != null && !image.isEmpty()) {
             try {
                 String fileName = image.getOriginalFilename();
                 Path path = Paths.get(uploadDirectory, fileName);
                 Files.write(path, image.getBytes());
-                product.setImage(fileName);
+                dbProduct.setImage(fileName);
             } catch (IOException e) {
                 throw new ResourceNotFoundException("Error Save Image: " + e.getMessage());
             }
         }
-        product.setName(ProductDTO.getName());
-        product.setDescription(ProductDTO.getDescription());
-        product.setPrice(ProductDTO.getPrice());
-        product.setStatus(ProductDTO.getStatus());
-        product.setCategory_id(ProductDTO.getCategory_id());
-        product = productRepository.save(product);
+        dbProduct.setName(productDTO.getName());
+        dbProduct.setDescription(productDTO.getDescription());
+        dbProduct.setPrice(productDTO.getPrice());
+        dbProduct.setStatus(productDTO.getStatus());
+        dbProduct.setCategory_id(productDTO.getCategory_id());
         //convert to dto
-        var updateProductDTO = new ProductDTO();
-        updateProductDTO.setId(product.getId());
-        updateProductDTO.setName(product.getName());
-        updateProductDTO.setDescription(product.getDescription());
-        updateProductDTO.setPrice(product.getPrice());
-        updateProductDTO.setStatus(product.getStatus());
-        updateProductDTO.setCategory_id(product.getCategory_id());
-        return updateProductDTO;
+        var updatedProductDTO = new ProductDTO();
+        updatedProductDTO.setName(dbProduct.getName());
+        updatedProductDTO.setDescription(dbProduct.getDescription());
+        updatedProductDTO.setPrice(productDTO.getPrice());
+        updatedProductDTO.setStatus(productDTO.getStatus());
+        updatedProductDTO.setCategory_id(productDTO.getCategory_id());
+        return productRepository.save(dbProduct);
     }
 
     @Override

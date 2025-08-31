@@ -3,6 +3,7 @@ package com.example.OrderCoffeeBE.Controller;
 import com.example.OrderCoffeeBE.Dto.Product.PostProductDTO;
 import com.example.OrderCoffeeBE.Dto.Product.ProductDTO;
 import com.example.OrderCoffeeBE.Entity.Product;
+import com.example.OrderCoffeeBE.Entity.Res.ProductResponse;
 import com.example.OrderCoffeeBE.Service.impl.ProductServiceImpl;
 import com.example.OrderCoffeeBE.Util.Anotation.ApiMessage;
 import com.example.OrderCoffeeBE.response.ApiResponse;
@@ -36,17 +37,25 @@ public class ProductController {
 
     @PostMapping
     @ApiMessage("Create Product")
-    public ResponseEntity<Product> createProduct(@ModelAttribute PostProductDTO requestProduct, MultipartFile image) throws IOException {
-        Product saveProduct = productService.createProduct(requestProduct, image);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saveProduct);
+    public ResponseEntity<ProductResponse> createProduct(
+            @ModelAttribute PostProductDTO requestProduct,
+            @RequestParam(value = "image", required = false) MultipartFile image
+    ) throws IOException {
+        Product savedProduct = productService.createProduct(requestProduct, image);
+        ProductResponse response = new ProductResponse(savedProduct);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PatchMapping("/{id}")
     @ApiMessage("Update Product")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable int id, @ModelAttribute ProductDTO updateProduct, MultipartFile image) throws IOException {
-        updateProduct.setId(id);
-        ProductDTO updatedProduct = productService.updateProduct(id,updateProduct, image);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable int id,
+            @ModelAttribute ProductDTO updateProductDTO,
+            @RequestParam(value = "image", required = false) MultipartFile image
+    ) throws IOException {
+        Product updatedProduct = productService.updateProduct(id, updateProductDTO, image);
+        ProductResponse response = new ProductResponse(updatedProduct);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/{id}")
