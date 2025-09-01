@@ -2,7 +2,7 @@ package com.example.OrderCoffeeBE.Service;
 
 import com.example.OrderCoffeeBE.Dto.Product.PostProductDTO;
 import com.example.OrderCoffeeBE.Dto.Product.ProductDTO;
-import com.example.OrderCoffeeBE.Entity.Product;
+import com.example.OrderCoffeeBE.Model.Product;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

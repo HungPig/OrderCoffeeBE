@@ -1,4 +1,4 @@
-package com.example.OrderCoffeeBE.Entity;
+package com.example.OrderCoffeeBE.Model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -24,7 +24,6 @@ public class OrderItem {
     private Integer product_id;
     private int quantity;
     private int subtotal;
-    private Integer status;
     private String notes;
     @CreationTimestamp
     private LocalDateTime createdAt;

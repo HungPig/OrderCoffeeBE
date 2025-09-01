@@ -1,4 +1,4 @@
-package com.example.OrderCoffeeBE.Entity;
+package com.example.OrderCoffeeBE.Model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

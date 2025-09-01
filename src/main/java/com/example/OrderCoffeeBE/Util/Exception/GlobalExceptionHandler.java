@@ -1,7 +1,5 @@
 package com.example.OrderCoffeeBE.Util.Exception;
 
-import com.example.OrderCoffeeBE.Entity.Res.RestResponse;
-import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 import org.springframework.http.HttpStatus;

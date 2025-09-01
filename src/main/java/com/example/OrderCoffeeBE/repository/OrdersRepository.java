@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.repository;
 
-import com.example.OrderCoffeeBE.Entity.Order;
+import com.example.OrderCoffeeBE.Model.Order;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

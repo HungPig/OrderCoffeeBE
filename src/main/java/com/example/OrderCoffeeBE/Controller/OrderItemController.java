@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Controller;
 
-import com.example.OrderCoffeeBE.Entity.OrderItem;
+import com.example.OrderCoffeeBE.Model.OrderItem;
 import com.example.OrderCoffeeBE.Service.impl.OrderItemServiceImpl;
 import com.example.OrderCoffeeBE.response.ApiResponse;
 import lombok.RequiredArgsConstructor;

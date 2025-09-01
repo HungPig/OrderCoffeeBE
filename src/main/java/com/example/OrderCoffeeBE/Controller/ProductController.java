@@ -2,11 +2,10 @@ package com.example.OrderCoffeeBE.Controller;
 
 import com.example.OrderCoffeeBE.Dto.Product.PostProductDTO;
 import com.example.OrderCoffeeBE.Dto.Product.ProductDTO;
-import com.example.OrderCoffeeBE.Entity.Product;
-import com.example.OrderCoffeeBE.Entity.Res.ProductResponse;
+import com.example.OrderCoffeeBE.Model.Product;
+import com.example.OrderCoffeeBE.Model.Res.ProductResponse;
 import com.example.OrderCoffeeBE.Service.impl.ProductServiceImpl;
 import com.example.OrderCoffeeBE.Util.Anotation.ApiMessage;
-import com.example.OrderCoffeeBE.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

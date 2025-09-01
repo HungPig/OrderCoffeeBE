@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.Category;
+import com.example.OrderCoffeeBE.Model.Category;
 
 import java.util.List;
 

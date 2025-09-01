@@ -1,4 +1,4 @@
-package com.example.OrderCoffeeBE.Entity.Request.User;
+package com.example.OrderCoffeeBE.Dto.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class RoleUser {
+public class RoleUserDTO {
     private int id;
     private String description;
 }

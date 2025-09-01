@@ -1,15 +1,14 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.Request.User.PostUserRequest;
-import com.example.OrderCoffeeBE.Entity.Request.User.UpdateUserRequest;
-import com.example.OrderCoffeeBE.Dto.UpdateUserDTO;
-import com.example.OrderCoffeeBE.Entity.User;
+import com.example.OrderCoffeeBE.Dto.User.PostUserDTO;
+import com.example.OrderCoffeeBE.Dto.User.UpdateUserDTO;
+import com.example.OrderCoffeeBE.Model.User;
 
 import java.util.List;
 
 public interface UserService {
     List<User> getAllUser();
-    PostUserRequest createUser(User user);
-    UpdateUserRequest updateUser(int id, UpdateUserDTO user);
+    PostUserDTO createUser(User user);
+    UpdateUserDTO updateUser(int id, UpdateUserDTO user);
     void deleteUser(int id);
 }

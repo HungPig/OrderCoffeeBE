@@ -1,10 +1,9 @@
 package com.example.OrderCoffeeBE.Controller;
 
-import com.example.OrderCoffeeBE.Entity.Category;
+import com.example.OrderCoffeeBE.Model.Category;
 import com.example.OrderCoffeeBE.Service.impl.CategoryServiceImpl;
 import com.example.OrderCoffeeBE.Util.Anotation.ApiMessage;
 import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
-import com.example.OrderCoffeeBE.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +41,8 @@ public class CategoryController {
     @ApiMessage("Update Categories")
     public ResponseEntity<Category> updateCategory(@PathVariable int id, @RequestBody Category category)  throws Exception{
         category.setId(id);
-        Category hungCategory = this.categoryService.updateCate(category);
-        return ResponseEntity.status(HttpStatus.OK).body(hungCategory);
+        Category updateCate = this.categoryService.updateCate(category);
+        return ResponseEntity.status(HttpStatus.OK).body(updateCate);
     }
 
     @DeleteMapping("/{id}")

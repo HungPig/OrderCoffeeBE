@@ -1,9 +1,7 @@
-package com.example.OrderCoffeeBE.Entity.Res;
+package com.example.OrderCoffeeBE.Model.Res;
 
-import com.example.OrderCoffeeBE.Entity.Product;
-import lombok.AllArgsConstructor;
+import com.example.OrderCoffeeBE.Model.Product;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class ProductResponse {

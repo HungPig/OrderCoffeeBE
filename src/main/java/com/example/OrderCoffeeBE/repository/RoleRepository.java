@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.repository;
 
-import com.example.OrderCoffeeBE.Entity.Role;
+import com.example.OrderCoffeeBE.Model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

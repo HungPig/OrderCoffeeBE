@@ -1,9 +1,9 @@
-package com.example.OrderCoffeeBE.Entity.Request.Order;
+package com.example.OrderCoffeeBE.Dto.Order;
 
 import lombok.Data;
 
 @Data
-public class PostOrderItemRequest {
+public class PostOrderItemDTO {
     private Integer product_id;
     private int quantity;
     private int subtotal;

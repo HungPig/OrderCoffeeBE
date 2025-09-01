@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
-import com.example.OrderCoffeeBE.Entity.Tables;
+import com.example.OrderCoffeeBE.Model.Tables;
 import com.example.OrderCoffeeBE.Service.TableService;
 import com.example.OrderCoffeeBE.repository.TableRepository;
 import lombok.RequiredArgsConstructor;

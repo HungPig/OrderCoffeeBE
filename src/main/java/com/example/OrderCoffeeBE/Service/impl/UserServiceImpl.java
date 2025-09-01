@@ -1,11 +1,10 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
 import com.example.OrderCoffeeBE.Convert.UserConvert;
-import com.example.OrderCoffeeBE.Entity.Request.User.PostUserRequest;
-import com.example.OrderCoffeeBE.Entity.Request.User.UpdateUserRequest;
-import com.example.OrderCoffeeBE.Entity.Role;
-import com.example.OrderCoffeeBE.Dto.UpdateUserDTO;
-import com.example.OrderCoffeeBE.Entity.User;
+import com.example.OrderCoffeeBE.Dto.User.PostUserDTO;
+import com.example.OrderCoffeeBE.Model.Role;
+import com.example.OrderCoffeeBE.Dto.User.UpdateUserDTO;
+import com.example.OrderCoffeeBE.Model.User;
 import com.example.OrderCoffeeBE.Service.RoleService;
 import com.example.OrderCoffeeBE.Service.UserService;
 import com.example.OrderCoffeeBE.repository.UserRepository;
@@ -26,7 +25,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PostUserRequest createUser(User user) {
+    public PostUserDTO createUser(User user) {
         if(user.getRole() != null){
             Role role = this.roleService.fetchRoleById(user.getRole().getId());
             user.setRole(role);
@@ -35,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UpdateUserRequest updateUser(int id , UpdateUserDTO user) {
+    public UpdateUserDTO updateUser(int id , UpdateUserDTO user) {
 
         Optional<User> userOptional = this.userRepository.findById(id);
         if(userOptional.isPresent())

@@ -1,19 +1,17 @@
-package com.example.OrderCoffeeBE.Entity.Request.User;
+package com.example.OrderCoffeeBE.Dto.User;
 
 import com.example.OrderCoffeeBE.Util.Contant.GenderEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.management.relation.Role;
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class UpdateUserRequest {
+public class PostUserDTO {
     private Long id;
     private String name;
     private String email;
     private Integer age;
     private GenderEnum gender;
-    private Role role;
+    private RoleUserDTO role;
 }

@@ -1,9 +1,8 @@
 package com.example.OrderCoffeeBE.Controller;
 
-import com.example.OrderCoffeeBE.Entity.Request.User.PostUserRequest;
-import com.example.OrderCoffeeBE.Entity.Request.User.UpdateUserRequest;
-import com.example.OrderCoffeeBE.Dto.UpdateUserDTO;
-import com.example.OrderCoffeeBE.Entity.User;
+import com.example.OrderCoffeeBE.Dto.User.PostUserDTO;
+import com.example.OrderCoffeeBE.Dto.User.UpdateUserDTO;
+import com.example.OrderCoffeeBE.Model.User;
 import com.example.OrderCoffeeBE.Service.impl.UserServiceImpl;
 import com.example.OrderCoffeeBE.Util.Anotation.ApiMessage;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +25,13 @@ public class UserController {
     }
     @PostMapping
     @ApiMessage("Create User")
-    public ResponseEntity<PostUserRequest> addUser( @RequestBody User user) {
-        PostUserRequest newUser = this.userService.createUser(user);
+    public ResponseEntity<PostUserDTO> addUser(@RequestBody User user) {
+        PostUserDTO newUser = this.userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
     @PutMapping("/{id}")
     @ApiMessage("Update User")
-    public ResponseEntity<UpdateUserRequest> updateUser(@PathVariable int id, @RequestBody UpdateUserDTO user) {
+    public ResponseEntity<UpdateUserDTO> updateUser(@PathVariable int id, @RequestBody UpdateUserDTO user) {
        return ResponseEntity.ok(this.userService.updateUser(id,user));
     }
     @DeleteMapping("/{id}")

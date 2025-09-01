@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
-import com.example.OrderCoffeeBE.Entity.Role;
+import com.example.OrderCoffeeBE.Model.Role;
 import com.example.OrderCoffeeBE.Service.RoleService;
 import com.example.OrderCoffeeBE.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;

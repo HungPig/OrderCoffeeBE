@@ -1,4 +1,4 @@
-package com.example.OrderCoffeeBE.Entity;
+package com.example.OrderCoffeeBE.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

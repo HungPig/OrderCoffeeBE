@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.Role;
+import com.example.OrderCoffeeBE.Model.Role;
 
 public interface RoleService {
     Role fetchRoleById(int id);

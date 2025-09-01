@@ -2,7 +2,7 @@ package com.example.OrderCoffeeBE.Service.impl;
 
 import com.example.OrderCoffeeBE.Dto.Product.PostProductDTO;
 import com.example.OrderCoffeeBE.Dto.Product.ProductDTO;
-import com.example.OrderCoffeeBE.Entity.Product;
+import com.example.OrderCoffeeBE.Model.Product;
 import com.example.OrderCoffeeBE.Service.ProductService;
 import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
 import com.example.OrderCoffeeBE.repository.ProductRepository;

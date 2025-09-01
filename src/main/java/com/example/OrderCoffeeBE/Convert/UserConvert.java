@@ -1,32 +1,32 @@
 package com.example.OrderCoffeeBE.Convert;
 
-import com.example.OrderCoffeeBE.Entity.Request.User.PostUserRequest;
-import com.example.OrderCoffeeBE.Entity.Request.User.RoleUser;
-import com.example.OrderCoffeeBE.Entity.Request.User.UpdateUserRequest;
-import com.example.OrderCoffeeBE.Entity.Role;
-import com.example.OrderCoffeeBE.Entity.User;
+import com.example.OrderCoffeeBE.Dto.User.PostUserDTO;
+import com.example.OrderCoffeeBE.Dto.User.RoleUserDTO;
+import com.example.OrderCoffeeBE.Dto.User.UpdateUserDTO;
+import com.example.OrderCoffeeBE.Model.Role;
+import com.example.OrderCoffeeBE.Model.User;
 
 
 public class UserConvert {
-    public static PostUserRequest convertToResCreatedUserRes(User user){
-        PostUserRequest res = new PostUserRequest();
-        RoleUser roleUser = new RoleUser();
+    public static PostUserDTO convertToResCreatedUserRes(User user){
+        PostUserDTO res = new PostUserDTO();
+        RoleUserDTO roleUserDTO = new RoleUserDTO();
         res.setId(user.getId());
         res.setName(user.getName());
         res.setEmail(user.getEmail());
         res.setAge(user.getAge());
         res.setGender(user.getGender());
         if(user.getRole() != null){
-            roleUser.setId(user.getRole().getId());
-            roleUser.setDescription(user.getRole().getDescription());
-            res.setRole(roleUser);
+            roleUserDTO.setId(user.getRole().getId());
+            roleUserDTO.setDescription(user.getRole().getDescription());
+            res.setRole(roleUserDTO);
         }
         return res;
     }
 
-    public static UpdateUserRequest convertToResUpdateUserRes(User user)
+    public static UpdateUserDTO convertToResUpdateUserRes(User user)
     {
-        UpdateUserRequest res = new UpdateUserRequest();
+        UpdateUserDTO res = new UpdateUserDTO();
         Role role = new Role();
         res.setId(user.getId());
         res.setName(user.getName());

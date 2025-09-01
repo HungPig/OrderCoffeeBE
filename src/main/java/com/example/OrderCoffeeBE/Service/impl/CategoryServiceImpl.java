@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
-import com.example.OrderCoffeeBE.Entity.Category;
+import com.example.OrderCoffeeBE.Model.Category;
 import com.example.OrderCoffeeBE.Service.CategoryService;
 import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
 import com.example.OrderCoffeeBE.repository.CategoryRepository;
@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RequiredArgsConstructor
 @Service("categoryService")

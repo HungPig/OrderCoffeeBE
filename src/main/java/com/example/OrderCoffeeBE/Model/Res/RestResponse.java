@@ -1,4 +1,4 @@
-package com.example.OrderCoffeeBE.Entity.Res;
+package com.example.OrderCoffeeBE.Model.Res;
 
 import lombok.Data;
 

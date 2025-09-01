@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.Tables;
+import com.example.OrderCoffeeBE.Model.Tables;
 
 import java.util.List;
 
