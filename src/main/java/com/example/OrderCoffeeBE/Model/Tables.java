@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "tables")
+@Table(name = "coffee_table")
 public class Tables {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer  id;
     private String status;
     @CreationTimestamp
     private LocalDateTime createdAt;

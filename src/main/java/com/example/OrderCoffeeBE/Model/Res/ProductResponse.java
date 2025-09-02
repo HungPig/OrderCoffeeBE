@@ -18,7 +18,7 @@ public class ProductResponse {
         this.description = product.getDescription();
         this.price = product.getPrice();
         this.status = product.getStatus();
-        this.category_id = product.getCategory_id();
+        this.category_id = product.getCategory().getId();
         this.imageUrl = product.getImage();
     }
 }

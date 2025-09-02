@@ -1,6 +1,7 @@
 package com.example.OrderCoffeeBE.Model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -11,10 +12,11 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String name;
     private String description;
@@ -26,6 +28,8 @@ public class Product {
     @CreationTimestamp
     private LocalDateTime updatedAt;
     private int status;
-    private int category_id;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }
 
