@@ -4,6 +4,8 @@ import com.example.OrderCoffeeBE.Util.Contant.GenderEnum;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -12,9 +14,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "name", length = 100, nullable = false)
-    private String name;
-    @Column(name = "password", length = 50, nullable = false)
+    @Column(name = "username", length = 100, nullable = false)
+    private String username;
+    @Column(name = "password", length = 255, nullable = false)
     private String password;
     @Column(name = "email", nullable = false, length = 50)
     private String email;
@@ -27,4 +29,8 @@ public class User {
     @ManyToOne()
     @JoinColumn(name = "role_id", nullable = false)
     private Role Role;
+    @Override
+    public String toString() {
+        return "User{id=" + id + ", username='" + username + "', email='" + email + "'}";
+    }
 }
