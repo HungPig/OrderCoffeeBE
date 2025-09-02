@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class PostUserDTO {
     private Long id;
-    private String name;
+    private String username;
     private String email;
     private Integer age;
     private GenderEnum gender;

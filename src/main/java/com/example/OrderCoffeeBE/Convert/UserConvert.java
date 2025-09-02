@@ -12,7 +12,7 @@ public class UserConvert {
         PostUserDTO res = new PostUserDTO();
         RoleUserDTO roleUserDTO = new RoleUserDTO();
         res.setId(user.getId());
-        res.setName(user.getName());
+        res.setUsername(user.getUsername());
         res.setEmail(user.getEmail());
         res.setAge(user.getAge());
         res.setGender(user.getGender());
@@ -29,7 +29,7 @@ public class UserConvert {
         UpdateUserDTO res = new UpdateUserDTO();
         Role role = new Role();
         res.setId(user.getId());
-        res.setName(user.getName());
+        res.setUsername(user.getUsername());
         res.setEmail(user.getEmail());
         res.setAge(user.getAge());
         res.setGender(user.getGender());

@@ -10,6 +10,7 @@ import com.example.OrderCoffeeBE.Service.UserService;
 import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
 import com.example.OrderCoffeeBE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
     @Override
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -31,6 +33,9 @@ public class UserServiceImpl implements UserService {
             Role role = this.roleService.fetchRoleById(user.getRole().getId());
             user.setRole(role);
         }
+        //ghi de password
+        String hashPassword  = this.passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashPassword);
         return UserConvert.convertToResCreatedUserRes(this.userRepository.save(user));
     }
 
@@ -41,7 +46,7 @@ public class UserServiceImpl implements UserService {
         if(userOptional.isPresent())
         {
             User currentUser = userOptional.get();
-            currentUser.setName(user.getName());
+            currentUser.setUsername(user.getUsername());
             currentUser.setEmail(user.getEmail());
             currentUser.setAge(user.getAge());
             currentUser.setGender(user.getGender());
