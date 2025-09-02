@@ -1,4 +1,4 @@
-package com.example.OrderCoffeeBE.Entity;
+package com.example.OrderCoffeeBE.Model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class categories {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

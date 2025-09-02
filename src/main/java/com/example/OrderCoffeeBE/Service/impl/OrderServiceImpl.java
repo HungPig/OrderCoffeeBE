@@ -1,23 +1,24 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
-import com.example.OrderCoffeeBE.Entity.Request.PostOrderItemRequest;
-import com.example.OrderCoffeeBE.Entity.Request.PostOrderRequest;
-import com.example.OrderCoffeeBE.Entity.orders;
-import com.example.OrderCoffeeBE.Entity.orders_items;
-import com.example.OrderCoffeeBE.Entity.products;
+import com.example.OrderCoffeeBE.Dto.Order.OrderDTO;
+import com.example.OrderCoffeeBE.Dto.Order.PostOrderDTO;
+import com.example.OrderCoffeeBE.Model.Product;
+import com.example.OrderCoffeeBE.Dto.Order.PostOrderItemDTO;
+import com.example.OrderCoffeeBE.Model.Order;
+import com.example.OrderCoffeeBE.Model.OrderItem;
+import com.example.OrderCoffeeBE.Model.Tables;
 import com.example.OrderCoffeeBE.Service.OrderService;
+import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
 import com.example.OrderCoffeeBE.repository.OrderItemRepository;
 import com.example.OrderCoffeeBE.repository.OrdersRepository;
+import com.example.OrderCoffeeBE.repository.ProductRepository;
 import com.example.OrderCoffeeBE.repository.TableRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service("orderService")
 @RequiredArgsConstructor
@@ -25,95 +26,73 @@ public class OrderServiceImpl implements OrderService {
     private final OrdersRepository ordersRepository;
     private final OrderItemRepository orderItemRepository;
     private final TableRepository tableRepository;
+    private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
     @Override
-    public List<orders> findAll() {
+    public List<Order> findAll() {
         return ordersRepository.findAllNotDeleted();
     }
 
     @Override
-    public orders createOrder(PostOrderRequest orderDTO) {
+    public Order createOrder(PostOrderDTO orderDTO) {
         // Validate input
-        if (orderDTO.getTable_id() == null || orderDTO.getTable_id() <= 0) {
-            throw new IllegalArgumentException("Invalid table ID.");
+        if(orderDTO == null)
+        {
+            throw new ResourceNotFoundException("Order Is Required");
         }
-        if (orderDTO.getItems() == null || orderDTO.getItems().isEmpty()) {
-            throw new IllegalArgumentException("Order must contain at least one item.");
-        }
-        orders order = new orders();
-        order.setTable_id(orderDTO.getTable_id());
-        order.setStatus(orderDTO.getStatus());
+        //convertDTO -> Order
+        //using ModelMapper
+        modelMapper.typeMap(PostOrderDTO.class, Order.class)
+                .addMappings(mapper -> mapper.skip(Order::setId));
+        Order order = new Order();
+        Tables tables = tableRepository.findById(orderDTO.getTable_id())
+                .orElseThrow(() -> new ResourceNotFoundException("Table Not Found"));
+        order.setTable(tables);
+        order.setStatus("Pending");
         order.setDeleted(0);
-        order.setTotal_amount(orderDTO.getTotalAmount());
-        orders savedOrder = ordersRepository.save(order);
-        List<orders_items> orderItemsList = new ArrayList<>();
-        for (PostOrderItemRequest itemDTO : orderDTO.getItems()) {
-            orders_items item = new orders_items();
+        int calculatedTotal = orderDTO.getItems().stream()
+                .mapToInt(PostOrderItemDTO::getSubtotal)
+                .sum();
+        order.setTotal_amount(calculatedTotal);
+        Order savedOrder = ordersRepository.save(order);
+        List<OrderItem> orderItemsList = new ArrayList<>();
+        for (PostOrderItemDTO itemDTO : orderDTO.getItems()) {
+            OrderItem item = new OrderItem();
             item.setOrder(savedOrder);
-            item.setProduct_id(itemDTO.getProduct_id());
+            //Lay Thong Tin San Pham Tu Co So Du Lieu
+            Product product = productRepository.findById(itemDTO.getProduct_id())
+                            .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + itemDTO.getProduct_id()));
+            item.setProduct(product);
             item.setQuantity(itemDTO.getQuantity());
             item.setSubtotal(itemDTO.getSubtotal());
             item.setNotes(itemDTO.getNotes());
             orderItemsList.add(item);
         }
-
         // Lưu các items của đơn hàng
         orderItemRepository.saveAll(orderItemsList);
-
         // Gán items vào đơn hàng và trả về
         savedOrder.setItems(orderItemsList);
         return savedOrder;
     }
     @Override
-    public orders updateOrder(PostOrderRequest orderDTO) {
-        Optional<orders> optionalOrder = ordersRepository.findById(orderDTO.getId());
-        if (optionalOrder.isPresent()) {
-            orders currentOrder = optionalOrder.get();
-            // Chỉ cập nhật table_id nếu giá trị không null và hợp lệ
-            if (orderDTO.getTable_id() != null) {
-                // Kiểm tra table_id có tồn tại trong bảng tables
-                if (!tableRepository.existsById(orderDTO.getTable_id())) {
-                    throw new IllegalArgumentException("Table ID không hợp lệ: " + orderDTO.getTable_id());
-                }
-                currentOrder.setTable_id(orderDTO.getTable_id());
-            }
-            // Update only non-null fields
-            if (orderDTO.getTable_id() != null) {
-                currentOrder.setTable_id(orderDTO.getTable_id());
-            }
-            if (orderDTO.getStatus() != null) {
-                currentOrder.setStatus(orderDTO.getStatus());
-            }
-            if (orderDTO.getItems() != null) {
-                orderItemRepository.deleteById(currentOrder.getId());
-                List<orders_items> orderItemsList = new ArrayList<>();
-                for (PostOrderItemRequest itemDTO : orderDTO.getItems()) {
-                    orders_items item = new orders_items();
-                    item.setProduct_id(itemDTO.getProduct_id());
-                    item.setQuantity(itemDTO.getQuantity());
-                    item.setSubtotal(itemDTO.getSubtotal());
-                    item.setStatus(itemDTO.getStatus());
-                    item.setNotes(itemDTO.getNotes());
-
-                    orderItemsList.add(item);
-                }
-                orderItemRepository.saveAll(orderItemsList);
-                currentOrder.setItems(orderItemsList);
-            }
-            return ordersRepository.save(currentOrder);
-        } else {
-            // Order not found
-            return null;
-        }
+    public Order updateOrder(int id, OrderDTO orderDTO) {
+        Order order = ordersRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order Not Found"));
+        modelMapper.typeMap(OrderDTO.class,Order.class)
+                .addMappings(mapper -> mapper.skip(Order::setId));
+        modelMapper.map(orderDTO, order);
+        return ordersRepository.save(order);
     }
 
     @Override
     public void sortDeleteOrder(int id) {
+        Order order = findById(id);
         ordersRepository.softDeleteById(id);
     }
 
     @Override
-    public orders findById(int id) {
+    public Order findById(int id) {
         return ordersRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Order not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + id));
     }
 }

@@ -1,6 +1,6 @@
 package com.example.OrderCoffeeBE.Service.impl;
 
-import com.example.OrderCoffeeBE.Entity.tables;
+import com.example.OrderCoffeeBE.Model.Tables;
 import com.example.OrderCoffeeBE.Service.TableService;
 import com.example.OrderCoffeeBE.repository.TableRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +14,18 @@ import java.util.NoSuchElementException;
 public class TableServiceImpl implements TableService {
     private final TableRepository tableRepository;
     @Override
-    public List<tables> findAll() {
+    public List<Tables> findAll() {
         return tableRepository.findAll();
     }
 
     @Override
-    public tables createTable(tables tables) {
+    public Tables createTable(Tables tables) {
         return tableRepository.save(tables);
     }
 
     @Override
-    public tables updateTable(tables updateTables) {
-        tables currentTables = this.findById(updateTables.getId());
+    public Tables updateTable(Tables updateTables) {
+        Tables currentTables = this.findById(updateTables.getId());
         if(currentTables != null) {
             currentTables.setId(updateTables.getId());
             currentTables.setStatus(updateTables.getStatus());
@@ -40,7 +40,7 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public tables findById(int id) {
+    public Tables findById(int id) {
         return tableRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Table not found with id: " + id));
     }

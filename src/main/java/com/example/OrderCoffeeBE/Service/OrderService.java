@@ -1,14 +1,16 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.Request.PostOrderRequest;
-import com.example.OrderCoffeeBE.Entity.orders;
+
+import com.example.OrderCoffeeBE.Dto.Order.OrderDTO;
+import com.example.OrderCoffeeBE.Dto.Order.PostOrderDTO;
+import com.example.OrderCoffeeBE.Model.Order;
 
 import java.util.List;
-
 public interface OrderService {
-    List<orders> findAll();
-    orders createOrder(PostOrderRequest orderDTO);
-    orders updateOrder(PostOrderRequest order);
+    List<Order> findAll();
+    Order createOrder(PostOrderDTO orderDTO);
+    Order updateOrder(int id, OrderDTO orderDTO);
     void sortDeleteOrder(int id);
-    orders findById(int id);
+    Order findById(int id);
+
 }

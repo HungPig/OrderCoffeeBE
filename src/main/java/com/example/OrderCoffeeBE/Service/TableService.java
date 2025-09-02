@@ -1,13 +1,13 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.tables;
+import com.example.OrderCoffeeBE.Model.Tables;
 
 import java.util.List;
 
 public interface TableService {
-    List<tables> findAll();
-    tables createTable(tables tables);
-    tables updateTable(tables tables);
+    List<Tables> findAll();
+    Tables createTable(Tables tables);
+    Tables updateTable(Tables tables);
     void deleteTable(int id);
-    tables findById(int id);
+    Tables findById(int id);
 }

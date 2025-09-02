@@ -1,10 +1,9 @@
-package com.example.OrderCoffeeBE.Entity;
+package com.example.OrderCoffeeBE.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -13,21 +12,24 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class products {
+@Table(name = "products")
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String name;
     private String description;
-    private Integer price;
+    private int price;
     private String image;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
     @CreationTimestamp
     private LocalDateTime updatedAt;
-    private Integer status;
-    private Integer category_id;
+    private int status;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }
 

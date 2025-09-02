@@ -1,14 +1,13 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.categories;
+import com.example.OrderCoffeeBE.Model.Category;
 
 import java.util.List;
 
 public interface CategoryService {
-     List<categories> getAllCategories();
-     categories findByIdCate(int id);
-     categories createCate(categories categories);
-     categories updateCate(categories categories);
+     List<Category> getAllCategories();
+     Category findByIdCate(int id);
+     Category createCate(Category Category);
+     Category updateCate(Category Category);
      void deleteCate(int id);
-     boolean isNameExist(String name);
 }

@@ -1,9 +1,10 @@
 package com.example.OrderCoffeeBE.Controller;
 
-import com.example.OrderCoffeeBE.Entity.Request.PostOrderRequest;
-import com.example.OrderCoffeeBE.Entity.orders;
+import com.example.OrderCoffeeBE.Dto.Order.OrderDTO;
+import com.example.OrderCoffeeBE.Dto.Order.PostOrderDTO;
+import com.example.OrderCoffeeBE.Model.Order;
 import com.example.OrderCoffeeBE.Service.impl.OrderServiceImpl;
-import com.example.OrderCoffeeBE.response.ApiResponse;
+import com.example.OrderCoffeeBE.Util.Anotation.ApiMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,56 +15,42 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/order")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class OrderController {
     private final OrderServiceImpl orderService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<orders>>> getAllOrder() {
-        List<orders> orders = orderService.findAll();
-        if (orders.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("No Order found"));
-        }
-        return ResponseEntity.ok(ApiResponse.success("Get Order Success", orders));
+    @ApiMessage("Fetch All Order")
+    public ResponseEntity<List<Order>> getAllOrder() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.orderService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders>> getOrderById(@PathVariable int id) {
-        orders fetchCategory = this.orderService.findById(id);
-        if (fetchCategory == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("Order not found " + id));
-        }
-        return ResponseEntity.ok(ApiResponse.success("Get Order Success", fetchCategory));
+    @ApiMessage("Fetch By Id")
+    public ResponseEntity<Order> getOrderById(@PathVariable int id) {
+       Order findOrder = this.orderService.findById(id);
+       return ResponseEntity.ok(findOrder);
     }
 
 
     @PostMapping
-    public ResponseEntity<ApiResponse<orders>> createOrder(@RequestBody PostOrderRequest order) {
-        orders newOrders = this.orderService.createOrder(order);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Create Orders Success", newOrders));
+    @ApiMessage("Create a Order")
+    public ResponseEntity<Order> createOrder(@RequestBody PostOrderDTO order) {
+        Order newOrder = this.orderService.createOrder(order);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders>> updateOrder(@PathVariable int id, @RequestBody PostOrderRequest order) {
+    @ApiMessage("Update a Order")
+    public ResponseEntity<Order> updateOrder(@PathVariable int id, @RequestBody OrderDTO order) {
         order.setId(id);
-        orders hungOrders = this.orderService.updateOrder(order);
-        if (hungOrders == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("Order not found"));
-        }
-        return ResponseEntity.ok(ApiResponse.success("Update Order Success", hungOrders));
+        Order updateOrder = this.orderService.updateOrder(id, order);
+        return ResponseEntity.status(HttpStatus.OK).body(updateOrder);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<orders>> deleteOrder(@PathVariable int id) {
-        orders currentOrder = this.orderService.findById(id);
-        if (currentOrder == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("Order not found" + id));
-        }
+    @ApiMessage("Delete a Order")
+    public ResponseEntity<Order> deleteOrder(@PathVariable int id) {
         this.orderService.sortDeleteOrder(id);
-        return ResponseEntity.ok(ApiResponse.success("Delete Order Success", currentOrder));
+        return ResponseEntity.ok(null);
     }
 }

@@ -1,13 +1,13 @@
 package com.example.OrderCoffeeBE.Service;
 
-import com.example.OrderCoffeeBE.Entity.orders_items;
+import com.example.OrderCoffeeBE.Model.OrderItem;
 
 import java.util.List;
 
 public interface OrderItemService {
-    List<orders_items> findAll();
-    orders_items createOrderItem(orders_items order_item);
-    orders_items updateOrderItem(orders_items order_item);
+    List<OrderItem> findAll();
+    OrderItem createOrderItem(OrderItem order_item);
+    OrderItem updateOrderItem(OrderItem order_item);
     void deleteOrderItem(int id);
-    orders_items findOrderItemById(int id);
+    OrderItem findOrderItemById(int id);
 }

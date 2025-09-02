@@ -1,8 +1,9 @@
 package com.example.OrderCoffeeBE.Controller;
 
-import com.example.OrderCoffeeBE.Entity.categories;
+import com.example.OrderCoffeeBE.Model.Category;
 import com.example.OrderCoffeeBE.Service.impl.CategoryServiceImpl;
-import com.example.OrderCoffeeBE.response.ApiResponse;
+import com.example.OrderCoffeeBE.Util.Anotation.ApiMessage;
+import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,68 +12,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class CategoryController {
     private final CategoryServiceImpl categoryService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<categories>>> getAllCategories() {
-        List<categories> categories = categoryService.getAllCategories();
-        if(categories.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("No categories found"));
-        }
-        return ResponseEntity.ok(ApiResponse.success("Get Category Success", categories));
+    @ApiMessage("Fetch All Categories")
+    public ResponseEntity<List<Category>> getAllCategories() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.categoryService.getAllCategories());
     }
     //wao
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<categories>> getCategoryById(@PathVariable int id) {
-        categories fetchCategory = this.categoryService.findByIdCate(id);
-        if(fetchCategory == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("Category not found " + id));
-        }
-        return ResponseEntity.ok(ApiResponse.success("Get Category Success", fetchCategory));
+    @ApiMessage("Fetch By Id User")
+    public ResponseEntity<Category> getCategoryById(@PathVariable int id) {
+        Category category = this.categoryService.findByIdCate(id);
+        return ResponseEntity.ok(category);
     }
 
-
-
     @PostMapping
-    public ResponseEntity<ApiResponse<categories>> createCategory(@RequestBody categories category) {
-        //check Name
-        boolean isNameExist = this.categoryService.isNameExist(category.getName());
-        if (isNameExist) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.error("Category name already exists"));
-        }
-        if(category.getName() == null || category.getName().isEmpty()) {
-            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error("Category name cannot be empty"));
-        }
-        categories newCategory = this.categoryService.createCate(category);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Create Category Success", newCategory));
+    @ApiMessage("Create Categories")
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) throws ResourceNotFoundException {
+        Category newCategory = this.categoryService.createCate(category);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<categories>> updateCategory(@PathVariable int id, @RequestBody categories category)  {
+    @ApiMessage("Update Categories")
+    public ResponseEntity<Category> updateCategory(@PathVariable int id, @RequestBody Category category)  throws Exception{
         category.setId(id);
-        categories hungCategory = this.categoryService.updateCate(category);
-        if (hungCategory == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("Category not found"));
-        }
-        return ResponseEntity.ok(ApiResponse.success("Update Category Success", hungCategory));
+        Category updateCate = this.categoryService.updateCate(category);
+        return ResponseEntity.status(HttpStatus.OK).body(updateCate);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<categories>> deleteCategory(@PathVariable int id) {
-        categories currentCategory = this.categoryService.findByIdCate(id);
-        if (currentCategory == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error("Category not found" + id));
-        }
+    @ApiMessage("Delete Categories")
+    public ResponseEntity<Category> deleteCategory(@PathVariable int id){
         this.categoryService.deleteCate(id);
-        return ResponseEntity.ok(ApiResponse.success("Delete Category Success", currentCategory));
+        return ResponseEntity.ok(null);
     }
 }

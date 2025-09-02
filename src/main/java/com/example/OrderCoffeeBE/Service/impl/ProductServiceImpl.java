@@ -1,10 +1,14 @@
 package com.example.OrderCoffeeBE.Service.impl;
-
-import com.example.OrderCoffeeBE.Entity.Request.PostProductRequest;
-import com.example.OrderCoffeeBE.Entity.products;
+import com.example.OrderCoffeeBE.Dto.Product.PostProductDTO;
+import com.example.OrderCoffeeBE.Dto.Product.ProductDTO;
+import com.example.OrderCoffeeBE.Model.Category;
+import com.example.OrderCoffeeBE.Model.Product;
 import com.example.OrderCoffeeBE.Service.ProductService;
+import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
+import com.example.OrderCoffeeBE.repository.CategoryRepository;
 import com.example.OrderCoffeeBE.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,67 +18,83 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-
-import static com.example.OrderCoffeeBE.Controller.ProductController.uploadDirectory;
 
 @RequiredArgsConstructor
 @Service("productService")
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
-
+    private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
+    public static String uploadDirectory = System.getProperty("user.dir") + "/access/products";
     @Override
-    public List<products> findAll() {
+    public List<Product> findAll() {
         return productRepository.findAll();
     }
 
     @Override
-    public products findById(int id) {
+    public Product findById(int id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
     }
 
     @Override
-    public products createProduct(products product) {
+    public Product createProduct(PostProductDTO request ,MultipartFile image) throws IOException {
+        Category category = categoryRepository.findById(request.getCategory_id())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        String originalFilename = image.getOriginalFilename();
+        Path path = Paths.get(uploadDirectory, originalFilename);
+        Files.write(path, image.getBytes());
+        // 2. Map DTO -> Entity
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setStatus(request.getStatus());
+        product.setCategory(category);
+        product.setImage(originalFilename);
+        // 3. Save DB
         return productRepository.save(product);
     }
 
     @Override
-    public products updateProduct(PostProductRequest updateProduct, MultipartFile image) {
-        products current = this.findById(updateProduct.getId());
-        if (updateProduct.getName() != null) {
-            current.setName(updateProduct.getName());
+    public Product updateProduct(int id, ProductDTO productDTO, MultipartFile image) throws IOException {
+        if(productDTO == null)
+        {
+            throw new ResourceNotFoundException("Product is required");
         }
-        if (updateProduct.getPrice() != null) {
-            current.setPrice(updateProduct.getPrice());
-        }
-        if (updateProduct.getDescription() != null) {
-            current.setDescription(updateProduct.getDescription());
-        }
-        if (updateProduct.getCategory_id() != null) {
-            current.setCategory_id(updateProduct.getCategory_id());
-        }
-        if (updateProduct.getStatus() != null) {
-            current.setStatus(updateProduct.getStatus());
-        }
+        Category exitsCategory = categoryRepository.findById(productDTO.getCategory_id())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        var dbProduct  = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
+        //update Product
         if (image != null && !image.isEmpty()) {
             try {
                 String fileName = image.getOriginalFilename();
                 Path path = Paths.get(uploadDirectory, fileName);
                 Files.write(path, image.getBytes());
-                current.setImage(fileName);
+                dbProduct.setImage(fileName);
             } catch (IOException e) {
-                throw new RuntimeException("Error Save Image: " + e.getMessage());
+                throw new ResourceNotFoundException("Error Save Image: " + e.getMessage());
             }
         }
-        return productRepository.save(current);
+        dbProduct.setName(productDTO.getName());
+        dbProduct.setDescription(productDTO.getDescription());
+        dbProduct.setPrice(productDTO.getPrice());
+        dbProduct.setStatus(productDTO.getStatus());
+        dbProduct.setCategory(exitsCategory);
+        //convert to dto
+        modelMapper.typeMap(ProductDTO.class, Product.class)
+                .addMappings(mapper -> mapper.skip(Product::setId));
+        modelMapper.map(productDTO, dbProduct);
+        return productRepository.save(dbProduct);
     }
 
-
-
-
     @Override
-    public void deleteProduct(products product) {
-        productRepository.delete(product);
+    public void deleteProduct(int id) {
+        var category = productRepository.findById(id).orElse(null);
+        if (category == null) {
+            throw new ResourceNotFoundException("Product not found");
+        }
+        this.productRepository.deleteById(id);
     }
 }
