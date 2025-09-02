@@ -1,23 +1,11 @@
 # Stage 1: Build the app with JDK 17
-FROM maven:3.9.9-amazoncorretto-17-debian AS build
-
+FROM maven:3-openjdk-17 AS build
 WORKDIR /app
-
-COPY ./server/OrderCoffeeBE/pom.xml .
-
-RUN mvn dependency:go-offline -B
-
-COPY ./server/OrderCoffeeBE/src ./src
-
-RUN mvn package -DskipTests
-
-# Stage 2: Run the app with JDK 17
+COPY . .
+RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk
-
 WORKDIR /app
-
 COPY --from=build /app/target/OrderCoffeeBE-0.0.1-SNAPSHOT.war OrderCoffee.war
-
 EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+RUN mkdir -p /app/access/products
+ENTRYPOINT ["java", "-jar", "OrderCoffee.war"]

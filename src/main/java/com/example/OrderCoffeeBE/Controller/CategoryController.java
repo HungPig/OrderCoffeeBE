@@ -22,7 +22,7 @@ public class CategoryController {
     public ResponseEntity<List<Category>> getAllCategories() {
         return ResponseEntity.status(HttpStatus.OK).body(this.categoryService.getAllCategories());
     }
-
+    //wao
     @GetMapping("/{id}")
     @ApiMessage("Fetch By Id User")
     public ResponseEntity<Category> getCategoryById(@PathVariable int id) {
