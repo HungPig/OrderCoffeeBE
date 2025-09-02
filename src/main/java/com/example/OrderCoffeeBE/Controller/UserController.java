@@ -18,27 +18,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserServiceImpl userService;
+
     @GetMapping
     @ApiMessage("fetch all User")
     public ResponseEntity<List<User>> getUser() {
         return ResponseEntity.status(HttpStatus.OK).body(this.userService.getAllUser());
     }
+
     @PostMapping
     @ApiMessage("Create User")
     public ResponseEntity<PostUserDTO> addUser(@RequestBody User user) {
         PostUserDTO newUser = this.userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
+
     @PutMapping("/{id}")
     @ApiMessage("Update User")
     public ResponseEntity<UpdateUserDTO> updateUser(@PathVariable int id, @RequestBody UpdateUserDTO user) {
-       return ResponseEntity.ok(this.userService.updateUser(id,user));
+        return ResponseEntity.ok(this.userService.updateUser(id, user));
     }
+
     @DeleteMapping("/{id}")
     @ApiMessage("Delete User")
     public ResponseEntity<Void> deleteUser(
-            @PathVariable("id") int id
-    ) throws Exception {
+            @PathVariable("id") int id) {
         this.userService.deleteUser(id);
         return ResponseEntity.ok(null);
     }

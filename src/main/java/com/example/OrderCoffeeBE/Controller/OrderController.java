@@ -43,7 +43,7 @@ public class OrderController {
     @ApiMessage("Update a Order")
     public ResponseEntity<Order> updateOrder(@PathVariable int id, @RequestBody OrderDTO order) {
         order.setId(id);
-        Order updateOrder = this.orderService.updateOrder(order);
+        Order updateOrder = this.orderService.updateOrder(id, order);
         return ResponseEntity.status(HttpStatus.OK).body(updateOrder);
     }
 

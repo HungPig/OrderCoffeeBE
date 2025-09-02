@@ -2,6 +2,7 @@ package com.example.OrderCoffeeBE.Model;
 
 import com.example.OrderCoffeeBE.Util.Contant.GenderEnum;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity

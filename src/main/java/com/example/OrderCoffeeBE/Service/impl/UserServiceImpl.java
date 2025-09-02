@@ -7,6 +7,7 @@ import com.example.OrderCoffeeBE.Dto.User.UpdateUserDTO;
 import com.example.OrderCoffeeBE.Model.User;
 import com.example.OrderCoffeeBE.Service.RoleService;
 import com.example.OrderCoffeeBE.Service.UserService;
+import com.example.OrderCoffeeBE.Util.Error.ResourceNotFoundException;
 import com.example.OrderCoffeeBE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,11 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public User findById(int id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    }
     @Override
     public void deleteUser(int id) {
         if(this.userRepository.existsById(id)){

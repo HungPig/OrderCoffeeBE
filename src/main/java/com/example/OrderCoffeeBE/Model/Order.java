@@ -2,6 +2,7 @@ package com.example.OrderCoffeeBE.Model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,9 +19,10 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(name = "table_id", nullable = false)
-    private Integer table_id;
+    private Integer  id;
+    @JoinColumn(name = "table_id", nullable = false)
+    @ManyToOne
+    private Tables table;
     private String status;
     @Column(name = "total_amount", nullable = false)
     private int total_amount;

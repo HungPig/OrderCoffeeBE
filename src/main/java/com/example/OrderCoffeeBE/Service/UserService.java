@@ -10,5 +10,6 @@ public interface UserService {
     List<User> getAllUser();
     PostUserDTO createUser(User user);
     UpdateUserDTO updateUser(int id, UpdateUserDTO user);
+    User findById(int id);
     void deleteUser(int id);
 }
